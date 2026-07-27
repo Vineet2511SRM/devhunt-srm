@@ -1,0 +1,1 @@
+// Badge model - Mongoose schema

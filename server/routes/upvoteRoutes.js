@@ -1,0 +1,1 @@
+// Upvote routes - /api/upvotes/*

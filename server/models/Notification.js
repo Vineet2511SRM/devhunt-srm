@@ -1,0 +1,1 @@
+// Notification model - Mongoose schema
