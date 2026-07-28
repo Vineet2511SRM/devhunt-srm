@@ -1,1 +1,90 @@
-// server.js - Express application entry point
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import env from './config/env.js';
+import connectDB from './config/db.js';
+
+// Initialize Express application
+const app = express();
+
+// ==========================================
+// 1. Core Middleware Configuration
+// ==========================================
+
+// Enable Cross-Origin Resource Sharing (CORS) for React frontend
+app.use(cors({
+  origin: env.CLIENT_URL,
+  credentials: true, // Allow cookies and authorization headers to be sent
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Parse incoming JSON payloads in request body (up to 10MB for project submissions)
+app.use(express.json({ limit: '10mb' }));
+
+// Parse URL-encoded form data
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Parse cookies attached to the client request
+app.use(cookieParser());
+
+// HTTP request logging in development mode
+if (env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
+// ==========================================
+// 2. Base Routes & Health Check
+// ==========================================
+
+// Root API welcome endpoint
+app.get('/api', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Welcome to DevHunt SRM API 🚀',
+    version: '1.0.0',
+    environment: env.NODE_ENV,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Health check endpoint to monitor server and database status
+app.get('/api/health', (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  res.status(200).json({
+    status: 'UP',
+    server: 'Running',
+    database: dbStatus,
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// ==========================================
+// 3. Server & Database Initialization
+// ==========================================
+
+const startServer = async () => {
+  try {
+    // Step 1: Connect to MongoDB database
+    await connectDB();
+
+    // Step 2: Start Express HTTP server listening on configured port
+    const PORT = env.PORT || 5000;
+    app.listen(PORT, () => {
+      console.log(`🟢 DevHunt SRM Server running in ${env.NODE_ENV} mode on port ${PORT}`);
+      console.log(`🔗 API Endpoint: http://localhost:${PORT}/api`);
+      console.log(`🩺 Health Check: http://localhost:${PORT}/api/health`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+// Start the server
+startServer();
+
+export default app;
