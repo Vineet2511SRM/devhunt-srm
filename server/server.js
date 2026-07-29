@@ -13,6 +13,7 @@ import { generalLimiter } from './middleware/rateLimiter.js';
 
 // Route imports
 import authRoutes from './routes/authRoutes.js';
+import projectRoutes from './routes/projectRoutes.js';
 
 // Initialize Express application
 const app = express();
@@ -81,6 +82,7 @@ app.get('/api/health', (req, res) => {
 // ==========================================
 
 app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
 
 // ==========================================
 // 4. Global Error Handler (must be LAST middleware)
