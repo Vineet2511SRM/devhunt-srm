@@ -3,15 +3,26 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import helmet from 'helmet';
 import env from './config/env.js';
 import connectDB from './config/db.js';
+
+// Middleware
+import errorHandler from './middleware/errorHandler.js';
+import { generalLimiter } from './middleware/rateLimiter.js';
+
+// Route imports
+import authRoutes from './routes/authRoutes.js';
 
 // Initialize Express application
 const app = express();
 
 // ==========================================
-// 1. Core Middleware Configuration
+// 1. Security & Core Middleware
 // ==========================================
+
+// Set security-related HTTP headers (XSS, content policy, clickjacking, etc.)
+app.use(helmet());
 
 // Enable Cross-Origin Resource Sharing (CORS) for React frontend
 app.use(cors({
@@ -34,6 +45,9 @@ app.use(cookieParser());
 if (env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+// Apply general rate limiter to all API routes
+app.use('/api', generalLimiter);
 
 // ==========================================
 // 2. Base Routes & Health Check
@@ -63,7 +77,19 @@ app.get('/api/health', (req, res) => {
 });
 
 // ==========================================
-// 3. Server & Database Initialization
+// 3. API Routes
+// ==========================================
+
+app.use('/api/auth', authRoutes);
+
+// ==========================================
+// 4. Global Error Handler (must be LAST middleware)
+// ==========================================
+
+app.use(errorHandler);
+
+// ==========================================
+// 5. Server & Database Initialization
 // ==========================================
 
 const startServer = async () => {
