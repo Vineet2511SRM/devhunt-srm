@@ -2,6 +2,7 @@ import User from '../models/User.js';
 import ApiError from '../utils/ApiError.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { sendTokenResponse } from '../utils/tokenUtils.js';
+import { sendEmail } from '../services/emailService.js';
 
 /**
  * @desc    Register a new user
@@ -22,6 +23,13 @@ export const register = asyncHandler(async (req, res) => {
     name: name.trim(),
     email: email.toLowerCase().trim(),
     password,
+  });
+
+  // Send Welcome Email (non-blocking)
+  sendEmail({
+    to: user.email,
+    subject: 'Welcome to DevHunt SRM! 🚀',
+    text: `Hi ${user.name},\n\nWelcome to DevHunt SRM! We are excited to have you on board. Start exploring and testing campus projects today!`,
   });
 
   // Send token response (201 Created)

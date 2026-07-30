@@ -50,7 +50,8 @@ export const toggleUpvote = asyncHandler(async (req, res) => {
         project.owner,
         'upvote',
         `${req.user.name} upvoted your project: ${project.title}`,
-        `/projects/${project._id}`
+        `/projects/${project._id}`,
+        project._id
       );
     }
 

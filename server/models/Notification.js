@@ -20,6 +20,10 @@ const notificationSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    relatedProject: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project',
+    },
     read: {
       type: Boolean,
       default: false,

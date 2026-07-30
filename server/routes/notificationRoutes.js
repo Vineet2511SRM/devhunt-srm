@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   getNotifications,
+  getUnreadCount,
   markAsRead,
   markAllAsRead,
 } from '../controllers/notificationController.js';
@@ -10,6 +11,9 @@ const router = express.Router();
 
 // All routes are protected
 router.use(protect);
+
+// GET /api/notifications/unread-count - Get unread count
+router.get('/unread-count', getUnreadCount);
 
 // GET /api/notifications - Get all notifications
 router.get('/', getNotifications);

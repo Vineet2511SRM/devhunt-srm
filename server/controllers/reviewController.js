@@ -3,6 +3,7 @@ import Project from '../models/Project.js';
 import ApiError from '../utils/ApiError.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { awardXP } from '../services/gamificationService.js';
+import { createNotification } from '../services/notificationService.js';
 
 /**
  * @desc    Add a review to a project
@@ -48,6 +49,15 @@ export const addReview = asyncHandler(async (req, res) => {
   await awardXP(reviewerId, 5, 'review_submitted');
   // +25 XP to project owner
   await awardXP(project.owner, 25, 'review_received');
+
+  // Notify project owner
+  await createNotification(
+    project.owner,
+    'review',
+    `${req.user.name} reviewed your project: ${project.title}`,
+    `/projects/${project._id}`,
+    project._id
+  );
 
   await review.populate('reviewer', 'name avatar');
 

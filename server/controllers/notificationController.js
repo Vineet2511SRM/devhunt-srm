@@ -12,17 +12,27 @@ export const getNotifications = asyncHandler(async (req, res) => {
     .sort({ createdAt: -1 })
     .limit(50); // Get latest 50 notifications
 
-  // Get count of unread notifications
-  const unreadCount = await Notification.countDocuments({
+  res.status(200).json({
+    success: true,
+    count: notifications.length,
+    notifications,
+  });
+});
+
+/**
+ * @desc    Get count of unread notifications
+ * @route   GET /api/notifications/unread-count
+ * @access  Private
+ */
+export const getUnreadCount = asyncHandler(async (req, res) => {
+  const count = await Notification.countDocuments({
     recipient: req.user._id,
     read: false,
   });
 
   res.status(200).json({
     success: true,
-    unreadCount,
-    count: notifications.length,
-    notifications,
+    count,
   });
 });
 
