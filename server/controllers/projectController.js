@@ -1,6 +1,7 @@
 import Project from '../models/Project.js';
 import ApiError from '../utils/ApiError.js';
 import asyncHandler from '../utils/asyncHandler.js';
+import { awardXP } from '../services/gamificationService.js';
 
 /**
  * @desc    Create a new project
@@ -24,6 +25,9 @@ export const createProject = asyncHandler(async (req, res) => {
     owner: req.user._id,
     status: status || 'published',
   });
+
+  // Award +10 XP for submitting a project
+  await awardXP(req.user._id, 10, 'project_submitted');
 
   // Populate owner info before sending the response
   await project.populate('owner', 'name email avatar');

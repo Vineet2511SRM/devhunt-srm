@@ -14,6 +14,10 @@ import { generalLimiter } from './middleware/rateLimiter.js';
 // Route imports
 import authRoutes from './routes/authRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
+import upvoteRoutes from './routes/upvoteRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 // Initialize Express application
 const app = express();
@@ -83,6 +87,10 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/upvotes', upvoteRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // ==========================================
 // 4. Global Error Handler (must be LAST middleware)
