@@ -1,0 +1,199 @@
+/* ================================================
+   DevHunt SRM — Kinetic Brutalism Home Styling
+   Exact Specification from Design Token Document
+   ================================================ */
+
+/* Noise Overlay (opacity 0.03) */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Brutal Border */
+.brutal-border {
+  border: 2px solid #3f3f46;
+  border-radius: 0px !important;
+}
+
+/* Acid Yellow Button with Silky Smooth Volt Glow */
+.acid-btn {
+  height: 80px;
+  padding: 0 48px;
+  background-color: #dfe104 !important;
+  color: #000000 !important;
+  border: 2px solid #3f3f46;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  text-transform: uppercase;
+  border-radius: 0px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 20px rgba(223, 225, 4, 0.35), 0 0 40px rgba(223, 225, 4, 0.15);
+}
+
+.acid-btn:hover {
+  background-color: #000000 !important;
+  color: #dfe104 !important;
+  border-color: #dfe104 !important;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 30px rgba(223, 225, 4, 0.65), 0 0 60px rgba(223, 225, 4, 0.35);
+}
+
+/* Outline Button (Hover floods white, text flips black) */
+.acid-outline-btn {
+  height: 80px;
+  padding: 0 48px;
+  background-color: rgba(9, 9, 11, 0.6);
+  backdrop-filter: blur(8px);
+  color: #fafafa;
+  border: 2px solid #3f3f46;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--font-size-lg);
+  text-transform: uppercase;
+  border-radius: 0px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.acid-outline-btn:hover {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.3);
+}
+
+/* Marquee Speed 40s Infinite */
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  background-color: #dfe104;
+  color: #000000;
+  padding: 1.5rem 0;
+  border-top: 2px solid #3f3f46;
+  border-bottom: 2px solid #3f3f46;
+  margin: var(--space-16) 0;
+  box-shadow: 0 0 25px rgba(223, 225, 4, 0.25);
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 25s linear infinite;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.25rem;
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Instant Background Flood to Acid Yellow on Card Hover */
+.card-hover-invert {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 2px solid #3f3f46;
+  background-color: #09090b;
+  border-radius: 0px !important;
+}
+
+.card-hover-invert:hover {
+  background-color: #dfe104 !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  box-shadow: 0 0 30px rgba(223, 225, 4, 0.45);
+}
+
+.card-hover-invert:hover * {
+  color: #000000 !important;
+  border-color: #000000 !important;
+}
+
+/* Hero Background with Soft Dark Vignette Overlay */
+.hero-kinetic-bg {
+  background: 
+    radial-gradient(ellipse at 50% 30%, rgba(9, 9, 11, 0.55) 0%, rgba(9, 9, 11, 0.88) 65%, rgba(9, 9, 11, 0.98) 100%),
+    url('/hero-bg.png') no-repeat center center / cover;
+  border-bottom: 2px solid #3f3f46;
+  position: relative;
+}
+
+/* Hero Typography Scale (clamp 3rem, 12vw, 14rem) */
+.hero-kinetic-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vw, 14rem);
+  line-height: 0.85;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-6);
+}
+
+.hero-description-kinetic {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  max-width: 800px;
+  margin: 0 auto var(--space-10);
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+/* Pipeline Section */
+.pipeline-section {
+  border: 2px solid #3f3f46;
+  padding: 128px var(--space-8);
+  background: #131315;
+  margin: var(--space-16) 0;
+  border-radius: 0px !important;
+}
+
+.pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: var(--space-10);
+}
+
+.pipeline-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+}
+
+.pipeline-icon-box {
+  width: 80px;
+  height: 80px;
+  border: 2px solid #3f3f46;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #09090b;
+  font-size: 2rem;
+  color: #dfe104;
+  border-radius: 0px !important;
+}
+
+@media (max-width: 768px) {
+  .pipeline-grid {
+    grid-template-columns: 1fr;
+  }
+}

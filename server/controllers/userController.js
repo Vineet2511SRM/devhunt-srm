@@ -48,3 +48,41 @@ export const getUserProfile = asyncHandler(async (req, res) => {
     projects,
   });
 });
+
+/**
+ * @desc    Update current user profile
+ * @route   PUT /api/users/profile
+ * @access  Private
+ */
+export const updateProfile = asyncHandler(async (req, res) => {
+  const { name, bio, profession, skills, department, github, linkedin, avatar } = req.body;
+
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    throw new ApiError(404, 'User not found.');
+  }
+
+  if (name !== undefined) user.name = name.trim();
+  if (bio !== undefined) user.bio = bio.trim();
+  if (profession !== undefined) user.profession = profession.trim();
+  if (department !== undefined) user.department = department.trim();
+  if (github !== undefined) user.github = github.trim();
+  if (linkedin !== undefined) user.linkedin = linkedin.trim();
+  if (avatar !== undefined) user.avatar = avatar;
+
+  if (skills !== undefined) {
+    if (Array.isArray(skills)) {
+      user.skills = skills;
+    } else if (typeof skills === 'string') {
+      user.skills = skills.split(',').map((s) => s.trim()).filter(Boolean);
+    }
+  }
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    user,
+    message: 'Profile updated successfully.',
+  });
+});

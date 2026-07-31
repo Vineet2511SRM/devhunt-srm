@@ -3,6 +3,10 @@ import ApiError from '../utils/ApiError.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { sendTokenResponse } from '../utils/tokenUtils.js';
 import { sendEmail } from '../services/emailService.js';
+import { OAuth2Client } from 'google-auth-library';
+import env from '../config/env.js';
+
+const googleClient = new OAuth2Client(env.GOOGLE_CLIENT_ID);
 
 /**
  * @desc    Register a new user
@@ -10,7 +14,11 @@ import { sendEmail } from '../services/emailService.js';
  * @access  Public
  */
 export const register = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, department, yearOfStudy, profession, skills } = req.body;
+
+  if (!email || !password || !name) {
+    throw new ApiError(400, 'Please provide name, email and password.');
+  }
 
   // Check if user already exists (provides a cleaner error than Mongoose duplicate key)
   const existingUser = await User.findOne({ email: email.toLowerCase() });
@@ -18,11 +26,23 @@ export const register = asyncHandler(async (req, res) => {
     throw new ApiError(409, 'An account with this email already exists.');
   }
 
+  // Parse skills array if string provided
+  let skillsArray = [];
+  if (Array.isArray(skills)) {
+    skillsArray = skills;
+  } else if (typeof skills === 'string') {
+    skillsArray = skills.split(',').map((s) => s.trim()).filter(Boolean);
+  }
+
   // Create user (password is hashed automatically by the pre-save hook)
   const user = await User.create({
     name: name.trim(),
     email: email.toLowerCase().trim(),
     password,
+    department: department || 'Computer Science & Engineering',
+    yearOfStudy: yearOfStudy || 2,
+    profession: profession ? profession.trim() : '',
+    skills: skillsArray,
   });
 
   // Send Welcome Email (non-blocking)
@@ -92,4 +112,71 @@ export const getMe = asyncHandler(async (req, res) => {
     success: true,
     user,
   });
+});
+
+/**
+ * @desc    Authenticate with Google (verify ID token, find/create user)
+ * @route   POST /api/auth/google
+ * @access  Public
+ */
+export const googleAuth = asyncHandler(async (req, res) => {
+  const { credential } = req.body;
+
+  if (!credential) {
+    throw new ApiError(400, 'Google credential is required.');
+  }
+
+  // Verify the Google ID token
+  let ticket;
+  try {
+    ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: env.GOOGLE_CLIENT_ID,
+    });
+  } catch (err) {
+    throw new ApiError(401, 'Invalid Google token.');
+  }
+
+  const payload = ticket.getPayload();
+  const { sub: googleId, email, name, picture } = payload;
+
+  if (!email) {
+    throw new ApiError(400, 'Google account does not have an email.');
+  }
+
+  // Check if user already exists by googleId or email
+  let user = await User.findOne({
+    $or: [{ googleId }, { email: email.toLowerCase() }],
+  });
+
+  if (user) {
+    // Link Google ID if user registered with email/password before
+    if (!user.googleId) {
+      user.googleId = googleId;
+      user.authProvider = 'google';
+      if (picture && !user.avatar) {
+        user.avatar = picture;
+      }
+      await user.save();
+    }
+  } else {
+    // Create new user from Google data
+    user = await User.create({
+      name: name || email.split('@')[0],
+      email: email.toLowerCase(),
+      googleId,
+      authProvider: 'google',
+      avatar: picture || '',
+    });
+
+    // Send Welcome Email (non-blocking)
+    sendEmail({
+      to: user.email,
+      subject: 'Welcome to DevHunt SRM! 🚀',
+      text: `Hi ${user.name},\n\nWelcome to DevHunt SRM! You signed in with Google. Start exploring and shipping campus projects today!`,
+    });
+  }
+
+  // Send token response (200 OK)
+  sendTokenResponse(user, 200, res);
 });

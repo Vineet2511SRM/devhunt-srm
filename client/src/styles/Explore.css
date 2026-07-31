@@ -1,0 +1,126 @@
+/* ================================================
+   DevHunt SRM — Kinetic Brutalism Explore Styling
+   ================================================ */
+
+.explore-header {
+  margin-bottom: var(--space-10);
+}
+
+.explore-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+  line-height: 0.95;
+  margin-bottom: var(--space-2);
+}
+
+/* Filter Bar Controls (Brutalist 2px borders) */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  margin-bottom: var(--space-10);
+  border: 2px solid #3f3f46;
+  border-radius: 0px !important;
+  background: #09090b;
+}
+
+.filter-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: var(--space-2) var(--space-4);
+  background: #09090b;
+  border: 2px solid #3f3f46;
+  border-radius: 0px !important;
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.filter-select:focus {
+  border-color: var(--color-accent);
+}
+
+.tech-filter-pills {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.tech-pill-btn {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 0px !important;
+  background: transparent;
+  border: 2px solid #3f3f46;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.tech-pill-btn:hover,
+.tech-pill-btn.active {
+  background: #dfe104 !important;
+  color: #000000 !important;
+  border-color: #dfe104 !important;
+}
+
+/* Pagination Footer */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-12);
+}
+
+.page-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 0px !important;
+  background: #09090b;
+  border: 2px solid #3f3f46;
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.page-btn:hover,
+.page-btn.active {
+  background: #dfe104 !important;
+  color: #000000 !important;
+  border-color: #dfe104 !important;
+}
+
+.page-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

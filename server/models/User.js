@@ -32,9 +32,20 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, 'Please provide a password'],
+      required: false,
       minlength: [6, 'Password must be at least 6 characters'],
       select: false, // Never return password in queries by default
+    },
+    // ─── Google OAuth ───
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true, // Allows multiple null values (for non-Google users)
+    },
+    authProvider: {
+      type: String,
+      enum: ['local', 'google'],
+      default: 'local',
     },
     avatar: {
       type: String,
@@ -43,6 +54,18 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: String,
       maxlength: [500, 'Bio cannot exceed 500 characters'],
+      default: '',
+    },
+    profession: {
+      type: String,
+      default: '',
+    },
+    skills: {
+      type: [String],
+      default: [],
+    },
+    department: {
+      type: String,
       default: '',
     },
     github: {
@@ -90,7 +113,7 @@ const userSchema = new mongoose.Schema(
 // Runs before every save(). Only hashes if the password field was modified
 // (so updating name/bio doesn't re-hash the existing password).
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+  if (!this.isModified('password') || !this.password) {
     return next();
   }
 

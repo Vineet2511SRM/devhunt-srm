@@ -1,0 +1,134 @@
+/* ================================================
+   DevHunt SRM — Project Detail Page Styling
+   ================================================ */
+
+.project-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.project-detail-title {
+  font-size: var(--font-size-4xl);
+  font-weight: 800;
+  margin-bottom: var(--space-2);
+}
+
+.project-detail-tagline {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+}
+
+/* Big Upvote Toggle Button */
+.upvote-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-hover);
+  color: var(--color-text-primary);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.upvote-btn:hover {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.upvote-btn.upvoted {
+  background: var(--gradient-upvote);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4);
+}
+
+.upvote-btn-icon {
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+}
+
+/* Lightbox Screenshot Gallery */
+.gallery-main {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-xl);
+  object-fit: cover;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  margin-bottom: var(--space-4);
+  cursor: pointer;
+}
+
+.gallery-thumbs {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-10);
+  overflow-x: auto;
+}
+
+.thumb-img {
+  width: 100px;
+  height: 60px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+  opacity: 0.6;
+}
+
+.thumb-img.active,
+.thumb-img:hover {
+  border-color: var(--color-accent);
+  opacity: 1;
+}
+
+/* Review Card Feedback */
+.review-card {
+  padding: var(--space-6);
+  margin-bottom: var(--space-4);
+}
+
+.review-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.review-feedback-block {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.feedback-pros {
+  background: rgba(16, 185, 129, 0.08);
+  border-left: 3px solid var(--color-success);
+}
+
+.feedback-cons {
+  background: rgba(244, 63, 94, 0.08);
+  border-left: 3px solid var(--color-error);
+}
+
+.feedback-suggestion {
+  background: rgba(59, 130, 246, 0.08);
+  border-left: 3px solid var(--color-accent);
+}
+
+@media (max-width: 768px) {
+  .project-detail-header {
+    flex-direction: column;
+  }
+}

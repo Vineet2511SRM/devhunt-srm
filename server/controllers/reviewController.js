@@ -20,44 +20,31 @@ export const addReview = asyncHandler(async (req, res) => {
     throw new ApiError(404, 'Project not found.');
   }
 
-  // Prevent user from reviewing their own project
-  if (project.owner.toString() === reviewerId.toString()) {
-    throw new ApiError(400, 'You cannot review your own project.');
-  }
-
-  // Check if user has already reviewed this project
-  const existingReview = await Review.findOne({
-    project: projectId,
-    reviewer: reviewerId,
-  });
-
-  if (existingReview) {
-    throw new ApiError(400, 'You have already reviewed this project.');
-  }
+  const isOwner = project.owner.toString() === reviewerId.toString();
 
   const review = await Review.create({
     project: projectId,
     reviewer: reviewerId,
-    ratings,
-    pros,
-    cons,
-    suggestion,
+    ratings: ratings || { uiux: 5, codeQuality: 5, idea: 5 },
+    pros: pros || 'Project Update / Comment',
+    cons: cons || 'N/A',
+    suggestion: suggestion || '',
   });
 
-  // Gamification: Award XP
-  // +5 XP to reviewer
-  await awardXP(reviewerId, 5, 'review_submitted');
-  // +25 XP to project owner
-  await awardXP(project.owner, 25, 'review_received');
+  if (!isOwner) {
+    // Gamification: Award XP
+    await awardXP(reviewerId, 5, 'review_submitted');
+    await awardXP(project.owner, 25, 'review_received');
 
-  // Notify project owner
-  await createNotification(
-    project.owner,
-    'review',
-    `${req.user.name} reviewed your project: ${project.title}`,
-    `/projects/${project._id}`,
-    project._id
-  );
+    // Notify project owner
+    await createNotification(
+      project.owner,
+      'review',
+      `${req.user.name} reviewed your project: ${project.title}`,
+      `/projects/${project._id}`,
+      project._id
+    );
+  }
 
   await review.populate('reviewer', 'name avatar');
 

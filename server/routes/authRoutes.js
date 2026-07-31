@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login, logout, getMe } from '../controllers/authController.js';
+import { register, login, logout, getMe, googleAuth } from '../controllers/authController.js';
 import { validateRegister, validateLogin } from '../validators/authValidators.js';
 import validate from '../middleware/validate.js';
 import { protect } from '../middleware/auth.js';
@@ -14,6 +14,9 @@ router.post('/register', validateRegister, validate, register);
 // POST /api/auth/login — Authenticate and get token
 //   Pipeline: authLimiter → validateLogin → validate → login
 router.post('/login', authLimiter, validateLogin, validate, login);
+
+// POST /api/auth/google — Authenticate with Google
+router.post('/google', googleAuth);
 
 // POST /api/auth/logout — Clear auth cookie
 //   Pipeline: protect → logout

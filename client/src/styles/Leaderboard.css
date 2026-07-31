@@ -1,0 +1,32 @@
+/* Leaderboard Kinetic Styles */
+.leaderboard-row-kinetic {
+  transition: all 0.15s ease;
+}
+
+.leaderboard-row-kinetic:hover {
+  background-color: #131315 !important;
+  box-shadow: inset 4px 0 0 #dfe104;
+}
+
+/* Leaderboard Page Hero Header with Tech Node & Volt Radial Glow */
+.leaderboard-hero-bg {
+  background: 
+    radial-gradient(circle at 80% 50%, rgba(223, 225, 4, 0.25) 0%, rgba(9, 9, 11, 0.75) 50%, rgba(9, 9, 11, 0.98) 100%),
+    url('/hero-bg.png') no-repeat center center / cover;
+  border-bottom: 2px solid #3f3f46;
+  position: relative;
+  overflow: hidden;
+  padding: 48px 0;
+  margin-bottom: 40px;
+}
+
+.leaderboard-tech-node-badge {
+  width: 90px;
+  height: 90px;
+  border: 2px solid #3f3f46;
+  background: #09090b;
+  box-shadow: 0 0 30px rgba(223, 225, 4, 0.4), inset 0 0 15px rgba(223, 225, 4, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

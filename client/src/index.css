@@ -1,5 +1,5 @@
 /* ================================================
-   DevHunt SRM — Global Styles
+   DevHunt SRM — Kinetic Brutalism Global Styles
    ================================================ */
 
 @import './styles/variables.css';
@@ -10,7 +10,7 @@
 .container {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 0 var(--space-8);
 }
 
 /* ---- Page Wrapper ---- */
@@ -21,87 +21,94 @@
   animation: fadeIn var(--transition-base) ease;
 }
 
-/* ---- Glassmorphism Card ---- */
+/* ---- Brutalist Card (0px Radius, 2px Border, No Shadow) ---- */
 .glass-card {
   background: var(--color-bg-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-border);
+  border-radius: 0px !important;
   transition: all var(--transition-base);
+  box-shadow: none !important;
 }
 
 .glass-card:hover {
-  background: var(--color-bg-card-hover);
-  border-color: var(--color-border-hover);
-  box-shadow: var(--shadow-md);
+  border-color: var(--color-accent);
 }
 
-/* ---- Buttons ---- */
+/* ---- Buttons (Kinetic Architecture) ---- */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-6);
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  font-size: var(--font-size-sm);
+  height: 56px;
+  padding: 0 var(--space-8);
+  border-radius: 0px !important;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--font-size-base);
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
   transition: all var(--transition-fast);
   cursor: pointer;
   white-space: nowrap;
+  border: 2px solid var(--color-border);
 }
 
 .btn:active {
-  transform: scale(0.96);
+  transform: scale(0.98);
 }
 
+/* Primary Acid Yellow Button */
 .btn-primary {
-  background: var(--gradient-accent);
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+  background-color: #dfe104 !important;
+  color: #000000 !important;
+  border-color: #3f3f46;
 }
 
 .btn-primary:hover {
-  background: var(--gradient-accent-hover);
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
-  transform: translateY(-1px);
+  background-color: #000000 !important;
+  color: #dfe104 !important;
+  border-color: #dfe104 !important;
+  transform: scale(1.03);
 }
 
+/* Outline Button (Hover floods white, text flips black) */
 .btn-outline {
-  background: transparent;
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
+  background-color: transparent;
+  color: #fafafa;
+  border: 2px solid #3f3f46;
 }
 
 .btn-outline:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-  background: rgba(124, 58, 237, 0.08);
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-color: #ffffff !important;
 }
 
 .btn-ghost {
   background: transparent;
   color: var(--color-text-secondary);
+  border: none;
 }
 
 .btn-ghost:hover {
-  color: var(--color-text-primary);
-  background: var(--color-bg-card);
+  color: var(--color-accent);
+  background: rgba(223, 225, 4, 0.08);
 }
 
 .btn-lg {
-  padding: var(--space-4) var(--space-8);
-  font-size: var(--font-size-base);
-  border-radius: var(--radius-lg);
+  height: 80px;
+  padding: 0 var(--space-10);
+  font-size: var(--font-size-lg);
 }
 
 .btn-sm {
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--font-size-xs);
+  height: 44px;
+  padding: 0 var(--space-4);
+  font-size: var(--font-size-sm);
 }
 
-/* ---- Form Inputs ---- */
+/* ---- Bottom-Border Only Inputs ---- */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -109,63 +116,75 @@
 }
 
 .form-group label {
+  font-family: var(--font-display);
   font-size: var(--font-size-sm);
-  font-weight: 500;
+  font-weight: 700;
+  text-transform: uppercase;
   color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
 }
 
 .form-input {
   width: 100%;
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-bg-input);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  height: 64px;
+  padding: 0 var(--space-3);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--color-border);
+  border-radius: 0px !important;
   color: var(--color-text-primary);
-  font-size: var(--font-size-base);
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
   transition: all var(--transition-fast);
 }
 
 .form-input:focus {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  border-bottom-color: var(--color-accent);
+  box-shadow: none;
 }
 
 .form-input::placeholder {
   color: var(--color-text-muted);
+  text-transform: uppercase;
 }
 
-/* ---- Badge / Chip ---- */
+textarea.form-input {
+  height: auto;
+  padding-top: var(--space-3);
+}
+
+/* ---- Kinetic Tag Chip ---- */
 .chip {
   display: inline-flex;
   align-items: center;
-  padding: var(--space-1) var(--space-3);
-  background: rgba(124, 58, 237, 0.12);
+  padding: 4px var(--space-3);
+  background: transparent;
   color: var(--color-accent);
+  font-family: var(--font-display);
   font-size: var(--font-size-xs);
-  font-weight: 500;
-  border-radius: var(--radius-full);
-  border: 1px solid rgba(124, 58, 237, 0.2);
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 0px !important;
+  border: 2px solid var(--color-border);
 }
 
-/* ---- Loading Skeleton ---- */
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--color-bg-card) 25%,
-    var(--color-bg-card-hover) 50%,
-    var(--color-bg-card) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: var(--radius-sm);
-}
-
-/* ---- Utility ---- */
+/* ---- Text Typography ---- */
 .text-gradient {
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-accent);
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  background-image: 
+    linear-gradient(to right, rgba(63, 63, 70, 0.18) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(63, 63, 70, 0.18) 1px, transparent 1px);
+  background-size: 48px 48px;
 }
 
 .text-center { text-align: center; }

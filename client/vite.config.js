@@ -5,6 +5,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    open: true,
+    watch: {
+      ignored: ['**/stitch_kinetic_assets/**'],
+    },
     proxy: {
       '/api': {
         target: 'http://localhost:5000',

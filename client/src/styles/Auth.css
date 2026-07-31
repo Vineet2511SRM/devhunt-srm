@@ -1,119 +1,126 @@
 /* ================================================
-   DevHunt SRM — Auth Pages Styling (Login & Register)
+   DevHunt SRM — Kinetic Brutalism Auth Styling
+   Exact Replica of Stitch "Join The Tribe" Page
    ================================================ */
 
-.auth-page {
+.auth-page-kinetic {
   min-height: calc(100vh - var(--navbar-height));
+  display: flex;
+  flex-direction: column;
+  background-color: #09090b;
+}
+
+/* Kinetic Input Fields */
+.kinetic-input {
+  border: 2px solid #3f3f46;
+  background-color: #09090b;
+  color: #fafafa;
+  padding: 14px 16px;
+  width: 100%;
+  outline: none;
+  font-family: var(--font-display);
+  font-size: var(--font-size-sm);
+  transition: all 0.15s ease;
+  border-radius: 0px !important;
+}
+
+.kinetic-input:focus {
+  border-color: #dfe104;
+  box-shadow: inset 0 0 0 1px #dfe104;
+}
+
+/* Kinetic Action Button */
+.kinetic-button {
+  background-color: #dfe104;
+  color: #09090b;
+  border: 2px solid #dfe104;
+  padding: 18px 32px;
+  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.25rem;
+  cursor: pointer;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-8) var(--space-4);
-  position: relative;
-  overflow: hidden;
+  gap: 12px;
+  transition: all 0.15s ease;
+  border-radius: 0px !important;
 }
 
-/* Background Mesh Glow */
-.auth-glow-bg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(
-    circle,
-    rgba(139, 92, 246, 0.15) 0%,
-    rgba(59, 130, 246, 0.08) 40%,
-    transparent 70%
-  );
-  filter: blur(60px);
-  pointer-events: none;
-  z-index: 0;
+.kinetic-button:hover {
+  background-color: #fafafa;
+  border-color: #fafafa;
+  color: #09090b;
 }
 
-/* Glassmorphism Auth Card */
-.auth-card {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 440px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--color-border-hover);
-  border-radius: var(--radius-xl);
-  padding: var(--space-8);
-  box-shadow: var(--shadow-lg);
-  animation: slideUp var(--transition-slow) ease;
-}
-
-.auth-header {
-  text-align: center;
-  margin-bottom: var(--space-8);
-}
-
-.auth-title {
-  font-size: var(--font-size-2xl);
+/* Stroke Title */
+.kinetic-stroke-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 9rem);
   font-weight: 800;
-  margin-bottom: var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 2px #fafafa;
+  line-height: 0.9;
+  text-align: center;
 }
 
-.auth-subtitle {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+/* Step Border Box with Absolute Badge */
+.step-box {
+  position: relative;
+  border: 2px solid #3f3f46;
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+  background: #09090b;
+  border-radius: 0px !important;
 }
 
-.auth-form {
+.step-badge {
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  background: #09090b;
+  padding: 0 8px;
+  font-family: var(--font-display);
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  color: #dfe104;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Grid Layout */
+.tribe-grid {
+  display: grid;
+  grid-template-columns: 12fr;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+  border-left: 2px solid #3f3f46;
+  border-right: 2px solid #3f3f46;
+}
+
+@media (min-width: 768px) {
+  .tribe-grid {
+    grid-template-columns: 4fr 8fr;
+  }
+}
+
+.tribe-sidebar {
+  padding: var(--space-8);
+  border-right: 2px solid #3f3f46;
+  border-bottom: 2px solid #3f3f46;
+  background: #131315;
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  justify-content: space-between;
 }
 
-.input-with-icon {
-  position: relative;
-}
-
-.input-icon {
-  position: absolute;
-  left: var(--space-4);
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-text-muted);
-  font-size: 1.1rem;
-}
-
-.input-with-icon .form-input {
-  padding-left: var(--space-12);
-}
-
-.password-toggle {
-  position: absolute;
-  right: var(--space-4);
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-text-muted);
-  font-size: 1.1rem;
-  cursor: pointer;
-  background: none;
-  border: none;
-}
-
-.password-toggle:hover {
-  color: var(--color-text-primary);
-}
-
-.auth-footer {
-  margin-top: var(--space-6);
-  text-align: center;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-.auth-footer a {
-  color: var(--color-accent);
-  font-weight: 600;
-}
-
-.auth-footer a:hover {
-  text-decoration: underline;
+.tribe-form-container {
+  padding: var(--space-8);
+  border-bottom: 2px solid #3f3f46;
+  background: #09090b;
 }

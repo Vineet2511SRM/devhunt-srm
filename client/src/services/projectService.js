@@ -24,3 +24,7 @@ export const deleteProject = (id) => api.delete(`/projects/${id}`);
 // Search projects
 export const searchProjects = (query) =>
   api.get('/projects', { params: { search: query } });
+
+// Upvote a project
+export const upvoteProject = (id) => api.post(`/projects/${id}/upvote`);
+

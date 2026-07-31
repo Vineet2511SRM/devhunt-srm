@@ -17,6 +17,8 @@ export const env = {
   JWT_EXPIRE: process.env.JWT_EXPIRE || '7d',
   COOKIE_EXPIRE: parseInt(process.env.COOKIE_EXPIRE || '7', 10),
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || '',
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || '',
   CLOUDINARY: {
     CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
     API_KEY: process.env.CLOUDINARY_API_KEY || '',

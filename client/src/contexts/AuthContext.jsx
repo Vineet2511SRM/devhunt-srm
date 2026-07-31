@@ -37,8 +37,11 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Register
-  const register = async (name, email, password) => {
-    const { data } = await api.post('/auth/register', { name, email, password });
+  const register = async (nameOrPayload, email, password) => {
+    const payload = typeof nameOrPayload === 'object'
+      ? nameOrPayload
+      : { name: nameOrPayload, email, password };
+    const { data } = await api.post('/auth/register', payload);
     localStorage.setItem('devhunt_token', data.token);
     setUser(data.user);
     return data;
@@ -63,6 +66,14 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  // Google Login
+  const googleLogin = async (credential) => {
+    const { data } = await api.post('/auth/google', { credential });
+    localStorage.setItem('devhunt_token', data.token);
+    setUser(data.user);
+    return data;
+  };
+
   const value = {
     user,
     loading,
@@ -70,6 +81,7 @@ export const AuthProvider = ({ children }) => {
     register,
     login,
     logout,
+    googleLogin,
     setUser,
   };
 

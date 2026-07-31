@@ -124,3 +124,68 @@
 .stagger-children > *:nth-child(7) { animation-delay: 480ms; }
 .stagger-children > *:nth-child(8) { animation-delay: 560ms; }
 .stagger-children > *:nth-child(9) { animation-delay: 640ms; }
+
+/* ---- Rhythmic Heartbeat Pulse Animation ---- */
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(223, 225, 4, 0.7);
+  }
+  14% {
+    transform: scale(1.15);
+    box-shadow: 0 0 25px 8px rgba(223, 225, 4, 0.9);
+  }
+  28% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(223, 225, 4, 0.7);
+  }
+  42% {
+    transform: scale(1.08);
+    box-shadow: 0 0 15px 5px rgba(223, 225, 4, 0.8);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(223, 225, 4, 0);
+  }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.8s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.heartbeat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50% !important;
+  background-color: #dfe104;
+  display: inline-block;
+  box-shadow: 0 0 12px #dfe104;
+  animation: heartbeat 1.5s infinite;
+}
+
+/* ---- Medical / Movie ECG Heart Monitor Line Animation ---- */
+.ecg-line-pulse {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: ecgSweep 2s linear infinite;
+}
+
+@keyframes ecgSweep {
+  0% {
+    stroke-dashoffset: 600;
+    opacity: 0.3;
+  }
+  40% {
+    opacity: 1;
+  }
+  80% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -600;
+    opacity: 0.3;
+  }
+}
+
+
