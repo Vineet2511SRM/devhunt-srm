@@ -1,1 +1,0 @@
-// Upvote button component

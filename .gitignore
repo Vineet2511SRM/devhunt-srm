@@ -144,3 +144,7 @@ vite.config.ts.timestamp-*
 
 # Development log (local reference only — not for GitHub)
 DEVLOG.md
+
+DESIGN.md
+
+api_tests.http

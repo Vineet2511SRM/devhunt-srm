@@ -1,1 +1,0 @@
-// Star rating input component
