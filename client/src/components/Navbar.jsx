@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import NotificationDropdown from './NotificationDropdown.jsx';
-import { FiPlus, FiUser, FiLogOut, FiMenu, FiX, FiCompass, FiAward } from 'react-icons/fi';
+import { FiPlus, FiUser, FiLogOut, FiMenu, FiX, FiCompass, FiAward, FiShield } from 'react-icons/fi';
 import { getInitials } from '../utils/helpers.js';
 import '../styles/Navbar.css';
 
@@ -66,6 +66,12 @@ const Navbar = () => {
                     <Link to="/dashboard" className="nav-dropdown-item">
                       <FiUser /> DASHBOARD
                     </Link>
+
+                    {user?.role === 'admin' && (
+                      <Link to="/admin" className="nav-dropdown-item" style={{ color: '#dfe104', fontWeight: 'bold' }}>
+                        <FiShield /> ADMIN PANEL
+                      </Link>
+                    )}
 
                     <Link to={`/profile/${user?._id}`} className="nav-dropdown-item">
                       <FiUser /> PUBLIC PROFILE

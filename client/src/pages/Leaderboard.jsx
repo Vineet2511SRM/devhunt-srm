@@ -7,13 +7,16 @@ import { getInitials } from '../utils/helpers.js';
 import { FiTrendingUp, FiCode, FiShield, FiZap, FiAward, FiUsers } from 'react-icons/fi';
 import '../styles/Leaderboard.css';
 
+import MetaTags from '../components/MetaTags.jsx';
+import { SkeletonBlock } from '../components/Skeleton.jsx';
+import EmptyState from '../components/EmptyState.jsx';
+
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [timeFilter, setTimeFilter] = useState('ALL TIME');
 
   useEffect(() => {
-    document.title = 'DEVHUNT SRM — LEADERBOARD';
     fetchLeaderboard();
   }, [timeFilter]);
 
@@ -31,6 +34,10 @@ const Leaderboard = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title="Leaderboard — DevHunt SRM"
+        description="Top campus developer rankings based on XP, project upvotes, quality peer reviews, and shipping frequency at SRM."
+      />
       <div className="page" style={{ paddingTop: 0, paddingBottom: 64 }}>
         {/* Header Hero Section with Tech Node Image & Volt Glow */}
         <div className="leaderboard-hero-bg">

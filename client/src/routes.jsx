@@ -1,38 +1,46 @@
+import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import { PageLoadingSpinner } from './components/Skeleton.jsx';
 
-// ---- Page imports (lazy loaded for performance) ----
-// These are placeholder components for now. We will replace them
-// with full implementations as we build each page (3.3 → 3.10).
-import Home from './pages/Home.jsx';
-import Explore from './pages/Explore.jsx';
-import ProjectDetail from './pages/ProjectDetail.jsx';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
-import SubmitProject from './pages/SubmitProject.jsx';
-import Dashboard from './pages/Dashboard.jsx';
-import Profile from './pages/Profile.jsx';
-import Leaderboard from './pages/Leaderboard.jsx';
-import NotFound from './pages/NotFound.jsx';
+// ---- Page imports (lazy loaded with React.lazy for code splitting) ----
+const Home = lazy(() => import('./pages/Home.jsx'));
+const Explore = lazy(() => import('./pages/Explore.jsx'));
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail.jsx'));
+const Login = lazy(() => import('./pages/Login.jsx'));
+const Register = lazy(() => import('./pages/Register.jsx'));
+const SubmitProject = lazy(() => import('./pages/SubmitProject.jsx'));
+const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
+const Profile = lazy(() => import('./pages/Profile.jsx'));
+const Leaderboard = lazy(() => import('./pages/Leaderboard.jsx'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard.jsx'));
+const NotFound = lazy(() => import('./pages/NotFound.jsx'));
+
+// Helper component to wrap route elements in Suspense
+const withSuspense = (Component) => (
+  <Suspense fallback={<PageLoadingSpinner />}>
+    <Component />
+  </Suspense>
+);
 
 const router = createBrowserRouter([
   // ---- Public Routes ----
-  { path: '/', element: <Home /> },
-  { path: '/explore', element: <Explore /> },
-  { path: '/projects/:id', element: <ProjectDetail /> },
-  { path: '/login', element: <Login /> },
-  { path: '/register', element: <Register /> },
-  { path: '/leaderboard', element: <Leaderboard /> },
-  { path: '/profile', element: <Profile /> },
-  { path: '/profile/:id', element: <Profile /> },
-  { path: '/users/:id', element: <Profile /> },
+  { path: '/', element: withSuspense(Home) },
+  { path: '/explore', element: withSuspense(Explore) },
+  { path: '/projects/:id', element: withSuspense(ProjectDetail) },
+  { path: '/login', element: withSuspense(Login) },
+  { path: '/register', element: withSuspense(Register) },
+  { path: '/leaderboard', element: withSuspense(Leaderboard) },
+  { path: '/profile', element: withSuspense(Profile) },
+  { path: '/profile/:id', element: withSuspense(Profile) },
+  { path: '/users/:id', element: withSuspense(Profile) },
 
   // ---- Protected Routes ----
   {
     path: '/submit',
     element: (
       <ProtectedRoute>
-        <SubmitProject />
+        {withSuspense(SubmitProject)}
       </ProtectedRoute>
     ),
   },
@@ -40,7 +48,7 @@ const router = createBrowserRouter([
     path: '/dashboard',
     element: (
       <ProtectedRoute>
-        <Dashboard />
+        {withSuspense(Dashboard)}
       </ProtectedRoute>
     ),
   },
@@ -48,13 +56,21 @@ const router = createBrowserRouter([
     path: '/projects/:id/edit',
     element: (
       <ProtectedRoute>
-        <SubmitProject />
+        {withSuspense(SubmitProject)}
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/admin',
+    element: (
+      <ProtectedRoute adminOnly={true}>
+        {withSuspense(AdminDashboard)}
       </ProtectedRoute>
     ),
   },
 
   // ---- 404 ----
-  { path: '*', element: <NotFound /> },
+  { path: '*', element: withSuspense(NotFound) },
 ]);
 
 export default router;

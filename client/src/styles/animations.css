@@ -8,6 +8,13 @@
   to { opacity: 1; }
 }
 
+/* Skeleton Pulse */
+@keyframes skeletonPulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+  100% { opacity: 0.4; }
+}
+
 /* Slide Up + Fade */
 @keyframes slideUp {
   from {

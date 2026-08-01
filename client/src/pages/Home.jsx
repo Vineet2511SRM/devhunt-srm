@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from '../components/Layout.jsx';
 import ProjectCard from '../components/ProjectCard.jsx';
+import { ProjectCardSkeleton } from '../components/Skeleton.jsx';
+import EmptyState from '../components/EmptyState.jsx';
 import HeartbeatECG from '../components/HeartbeatECG.jsx';
+import MetaTags from '../components/MetaTags.jsx';
 import { getProjects } from '../services/projectService.js';
-import { FiCompass, FiZap, FiMessageSquare, FiTrendingUp } from 'react-icons/fi';
+import { FiZap, FiMessageSquare, FiTrendingUp } from 'react-icons/fi';
 import '../styles/Home.css';
 
 const Home = () => {
@@ -12,7 +15,6 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.title = 'DEVHUNT SRM — PRECISION SHIPPING';
     fetchTrending();
   }, []);
 
@@ -29,6 +31,10 @@ const Home = () => {
 
   return (
     <Layout>
+      <MetaTags
+        title="DevHunt SRM — Product Hunt for Campus Developers"
+        description="The premier student ecosystem at SRM Institute of Science and Technology for building, launching, and reviewing developer projects."
+      />
       <div className="noise-overlay" />
 
       <div className="page" style={{ paddingTop: 0 }}>
@@ -104,16 +110,16 @@ const Home = () => {
           {loading ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 'var(--space-6)' }}>
               {[1, 2, 3].map((n) => (
-                <div key={n} className="brutal-border skeleton" style={{ height: 320 }} />
+                <ProjectCardSkeleton key={n} />
               ))}
             </div>
           ) : trendingProjects.length === 0 ? (
-            <div className="brutal-border text-center" style={{ padding: 'var(--space-12)', background: 'var(--color-bg-secondary)' }}>
-              <p className="text-muted" style={{ textTransform: 'uppercase' }}>NO PROJECTS UPLOADED YET. BE THE FIRST TO SHIP!</p>
-              <Link to="/submit" className="acid-btn" style={{ marginTop: 'var(--space-4)', display: 'inline-block', padding: '10px 20px' }}>
-                SHIP PROJECT
-              </Link>
-            </div>
+            <EmptyState
+              title="No projects shipped yet"
+              description="Be the first campus developer to launch a project on DevHunt SRM!"
+              actionText="Ship Project"
+              actionLink="/submit"
+            />
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 'var(--space-6)' }}>
               {trendingProjects.map((project) => (
@@ -137,6 +143,8 @@ const Home = () => {
             <img 
               src="/launch-graphic.png" 
               alt="Launch Trajectory" 
+              loading="lazy"
+              onError={(e) => { e.target.style.display = 'none'; }}
               style={{ position: 'absolute', right: 0, top: 0, width: '50%', height: '100%', objectFit: 'cover', opacity: 0.6, pointerEvents: 'none' }} 
             />
             <div style={{ position: 'relative', zIndex: 2, padding: '48px 36px', maxWidth: '600px' }}>

@@ -1,12 +1,14 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate } from 'react';
+import { Navigate as RouterNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 
 /**
  * Wraps private routes. Redirects to /login if user is not authenticated.
- * Shows nothing while auth state is loading (prevents flash of login page).
+ * If `adminOnly` is set to true, redirects non-admin users to /dashboard.
+ * Shows spinner while auth state is loading.
  */
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+const ProtectedRoute = ({ children, adminOnly = false }) => {
+  const { user, isAuthenticated, loading } = useAuth();
 
   if (loading) {
     return (
@@ -17,7 +19,11 @@ const ProtectedRoute = ({ children }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <RouterNavigate to="/login" replace />;
+  }
+
+  if (adminOnly && user?.role !== 'admin') {
+    return <RouterNavigate to="/dashboard" replace />;
   }
 
   return children;

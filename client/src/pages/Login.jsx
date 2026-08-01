@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { toast } from 'react-hot-toast';
+import MetaTags from '../components/MetaTags.jsx';
 import '../styles/Auth.css';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -76,6 +77,10 @@ const Login = () => {
 
   return (
     <div className="auth-page-kinetic">
+      <MetaTags
+        title="Login — DevHunt SRM"
+        description="Authenticate to access your DevHunt SRM developer account, manage project submissions, and upvote campus innovations."
+      />
       {/* Top Status Marquee Banner */}
       <div className="marquee-container" style={{ margin: 0, padding: '8px 0', background: '#09090b', borderBottom: '2px solid #3F3F46' }}>
         <div className="marquee-content" style={{ fontSize: '0.75rem', color: '#a1a1aa', fontFamily: 'var(--font-mono)' }}>
@@ -136,6 +141,8 @@ const Login = () => {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
+                autoFocus
+                aria-label="Email address"
                 style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: '2px solid #3F3F46', padding: '10px 0', color: '#fafafa', outline: 'none', fontFamily: 'var(--font-mono)', fontSize: '0.9rem' }}
               />
             </div>

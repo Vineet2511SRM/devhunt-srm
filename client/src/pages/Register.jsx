@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { toast } from 'react-hot-toast';
+import MetaTags from '../components/MetaTags.jsx';
 import { FiArrowRight } from 'react-icons/fi';
 import '../styles/Auth.css';
 
@@ -110,6 +111,10 @@ const Register = () => {
 
   return (
     <div className="auth-page-kinetic">
+      <MetaTags
+        title="Join the Tribe — DevHunt SRM"
+        description="Create your DevHunt SRM developer account to showcase projects, collect peer feedback, and climb the campus leaderboard."
+      />
       {/* Top Branding Bar */}
       <header style={{ borderBottom: '2px solid #3F3F46', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#09090b' }}>
         <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 800, color: '#dfe104', textTransform: 'uppercase', letterSpacing: '-0.04em' }}>
@@ -201,6 +206,8 @@ const Register = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
+                      autoFocus
+                      aria-label="Full name"
                     />
                   </div>
 

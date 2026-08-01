@@ -24,7 +24,16 @@ const ProjectCard = ({ project }) => {
     <div className="card-hover-invert brutal-border p-6 flex flex-col gap-4 animate-slide-up" style={{ padding: 'var(--space-6)' }}>
       {/* Screenshot Image Thumbnail */}
       <Link to={`/projects/${_id}`}>
-        <img src={thumbnail} alt={title} className="project-card-image brutal-border" loading="lazy" />
+        <img
+          src={thumbnail}
+          alt={title}
+          className="project-card-image brutal-border"
+          loading="lazy"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80';
+          }}
+        />
       </Link>
 
       {/* Card Header & Upvote Pill */}

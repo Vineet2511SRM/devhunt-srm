@@ -27,6 +27,10 @@ import {
 } from 'react-icons/fi';
 import '../styles/Dashboard.css';
 
+import MetaTags from '../components/MetaTags.jsx';
+import { ProfileSkeleton } from '../components/Skeleton.jsx';
+import EmptyState from '../components/EmptyState.jsx';
+
 const Dashboard = () => {
   const { user, logout, getMe } = useAuth();
   const [profileData, setProfileData] = useState(null);
@@ -42,7 +46,6 @@ const Dashboard = () => {
   const [updatingProfile, setUpdatingProfile] = useState(false);
 
   useEffect(() => {
-    document.title = `DEVHUNT SRM — ${activeTab}`;
     fetchDashboard();
   }, [activeTab]);
 
@@ -101,9 +104,10 @@ const Dashboard = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="page">
+        <MetaTags title="Developer Dashboard — DevHunt SRM" />
+        <div className="page" style={{ paddingTop: '32px' }}>
           <div className="container">
-            <div className="brutal-border skeleton" style={{ height: 420 }} />
+            <ProfileSkeleton />
           </div>
         </div>
       </Layout>

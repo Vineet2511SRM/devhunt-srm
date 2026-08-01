@@ -10,6 +10,7 @@ import connectDB from './config/db.js';
 // Middleware
 import errorHandler from './middleware/errorHandler.js';
 import { generalLimiter } from './middleware/rateLimiter.js';
+import mongoSanitize from './middleware/sanitize.js';
 
 // Route imports
 import authRoutes from './routes/authRoutes.js';
@@ -18,6 +19,7 @@ import reviewRoutes from './routes/reviewRoutes.js';
 import upvoteRoutes from './routes/upvoteRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 // Initialize Express application
 const app = express();
@@ -26,18 +28,30 @@ const app = express();
 // 1. Security & Core Middleware
 // ==========================================
 
-// Set security-related HTTP headers (XSS, content policy, clickjacking, etc.)
+// Set security-related HTTP headers
 app.use(helmet());
 
-// Enable Cross-Origin Resource Sharing (CORS) for React frontend
-app.use(cors({
-  origin: env.CLIENT_URL,
-  credentials: true, // Allow cookies and authorization headers to be sent
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+// Enable Cross-Origin Resource Sharing (CORS) with allowed origins list
+const allowedOrigins = env.CLIENT_URL ? env.CLIENT_URL.split(',').map((url) => url.trim()) : ['http://localhost:5173'];
 
-// Parse incoming JSON payloads in request body (up to 10MB for project submissions)
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, or Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+        return callback(null, true);
+      } else {
+        return callback(new Error(`CORS origin '${origin}' not allowed by policy`), false);
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
+
+// Parse JSON request payloads
 app.use(express.json({ limit: '10mb' }));
 
 // Parse URL-encoded form data
@@ -45,6 +59,9 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Parse cookies attached to the client request
 app.use(cookieParser());
+
+// NoSQL Injection Sanitization
+app.use(mongoSanitize);
 
 // HTTP request logging in development mode
 if (env.NODE_ENV === 'development') {
@@ -69,7 +86,7 @@ app.get('/api', (req, res) => {
   });
 });
 
-// Health check endpoint to monitor server and database status
+// Health check endpoint
 app.get('/api/health', (req, res) => {
   const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
   res.status(200).json({
@@ -91,6 +108,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/upvotes', upvoteRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/admin', adminRoutes);
 
 // ==========================================
 // 4. Global Error Handler (must be LAST middleware)
@@ -104,10 +122,7 @@ app.use(errorHandler);
 
 const startServer = async () => {
   try {
-    // Step 1: Connect to MongoDB database
     await connectDB();
-
-    // Step 2: Start Express HTTP server listening on configured port
     const PORT = env.PORT || 5000;
     app.listen(PORT, () => {
       console.log(`🟢 DevHunt SRM Server running in ${env.NODE_ENV} mode on port ${PORT}`);
@@ -120,7 +135,6 @@ const startServer = async () => {
   }
 };
 
-// Start the server
 startServer();
 
 export default app;

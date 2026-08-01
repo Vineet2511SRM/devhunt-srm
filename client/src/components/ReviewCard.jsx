@@ -13,7 +13,14 @@ const ReviewCard = ({ review }) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
           <div className="user-avatar" style={{ width: 38, height: 38 }}>
             {reviewer.avatar ? (
-              <img src={reviewer.avatar} alt={reviewer.name} />
+              <img
+                src={reviewer.avatar}
+                alt={reviewer.name}
+                loading="lazy"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
             ) : (
               getInitials(reviewer.name)
             )}
