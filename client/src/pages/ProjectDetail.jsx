@@ -8,7 +8,7 @@ import { getProject, upvoteProject } from '../services/projectService.js';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { getInitials } from '../utils/helpers.js';
 import { toast } from 'react-hot-toast';
-import { FiArrowUp, FiGithub, FiExternalLink, FiStar, FiUser, FiCalendar, FiCode } from 'react-icons/fi';
+import { FiArrowUp, FiArrowRight, FiGithub, FiExternalLink, FiStar, FiUser, FiCalendar, FiCode } from 'react-icons/fi';
 
 const ProjectDetail = () => {
   const { id } = useParams();
