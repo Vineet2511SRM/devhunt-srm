@@ -9,6 +9,8 @@ const Explore = lazy(() => import('./pages/Explore.jsx'));
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail.jsx'));
 const Login = lazy(() => import('./pages/Login.jsx'));
 const Register = lazy(() => import('./pages/Register.jsx'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword.jsx'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword.jsx'));
 const SubmitProject = lazy(() => import('./pages/SubmitProject.jsx'));
 const Dashboard = lazy(() => import('./pages/Dashboard.jsx'));
 const Profile = lazy(() => import('./pages/Profile.jsx'));
@@ -30,6 +32,8 @@ const router = createBrowserRouter([
   { path: '/projects/:id', element: withSuspense(ProjectDetail) },
   { path: '/login', element: withSuspense(Login) },
   { path: '/register', element: withSuspense(Register) },
+  { path: '/forgot-password', element: withSuspense(ForgotPassword) },
+  { path: '/reset-password/:token', element: withSuspense(ResetPassword) },
   { path: '/leaderboard', element: withSuspense(Leaderboard) },
   { path: '/profile', element: withSuspense(Profile) },
   { path: '/profile/:id', element: withSuspense(Profile) },

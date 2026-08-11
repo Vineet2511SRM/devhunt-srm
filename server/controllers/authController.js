@@ -2,8 +2,9 @@ import User from '../models/User.js';
 import ApiError from '../utils/ApiError.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { sendTokenResponse } from '../utils/tokenUtils.js';
-import { sendEmail } from '../services/emailService.js';
+import { sendEmail, sendPasswordResetEmail, verifySmtpConnection } from '../services/emailService.js';
 import { OAuth2Client } from 'google-auth-library';
+import crypto from 'crypto';
 import env from '../config/env.js';
 
 const googleClient = new OAuth2Client(env.GOOGLE_CLIENT_ID);
@@ -180,3 +181,89 @@ export const googleAuth = asyncHandler(async (req, res) => {
   // Send token response (200 OK)
   sendTokenResponse(user, 200, res);
 });
+
+/**
+ * @desc    Forgot Password — Request Reset Email via SMTP
+ * @route   POST /api/auth/forgot-password
+ * @access  Public
+ */
+export const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email: email.toLowerCase() });
+  if (!user) {
+    throw new ApiError(404, 'No account found with that email address.');
+  }
+
+  // Get reset token and save to database
+  const resetToken = user.getResetPasswordToken();
+  await user.save({ validateBeforeSave: false });
+
+  // Create reset URL
+  const resetUrl = `${env.CLIENT_URL || 'http://localhost:5173'}/reset-password/${resetToken}`;
+
+  try {
+    await sendPasswordResetEmail({
+      to: user.email,
+      name: user.name,
+      resetUrl,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'PASSWORD RESET AUTHORIZATION DISPATCHED VIA SMTP',
+      resetUrl: env.NODE_ENV === 'development' ? resetUrl : undefined,
+    });
+  } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    throw new ApiError(500, 'Email dispatch failed. Please check SMTP configuration.');
+  }
+});
+
+/**
+ * @desc    Reset Password using Crypto Token
+ * @route   POST /api/auth/reset-password/:token
+ * @access  Public
+ */
+export const resetPassword = asyncHandler(async (req, res) => {
+  // Hash token from URL params
+  const resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    throw new ApiError(400, 'Invalid or expired password reset authorization token.');
+  }
+
+  // Set new password
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+  await user.save();
+
+  // Log in user with fresh JWT token
+  sendTokenResponse(user, 200, res);
+});
+
+/**
+ * @desc    Test & Verify SMTP Connection
+ * @route   POST /api/auth/test-smtp
+ * @access  Public
+ */
+export const testSmtp = asyncHandler(async (req, res) => {
+  const status = await verifySmtpConnection();
+  res.status(200).json({
+    success: true,
+    status,
+  });
+});
+

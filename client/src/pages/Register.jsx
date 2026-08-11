@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { toast } from 'react-hot-toast';
 import MetaTags from '../components/MetaTags.jsx';
+import AuthSidebar from '../components/AuthSidebar.jsx';
 import { FiArrowRight } from 'react-icons/fi';
 import '../styles/Auth.css';
 
@@ -142,28 +143,11 @@ const Register = () => {
 
         {/* 2-Column Form Grid */}
         <div className="tribe-grid">
-          {/* Sidebar */}
-          <div className="tribe-sidebar">
-            <div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.75rem', fontWeight: 800, color: '#dfe104', textTransform: 'uppercase', marginBottom: 8 }}>
-                INITIALIZE
-              </h2>
-              <p style={{ fontSize: '0.85rem', color: '#a1a1aa', textTransform: 'uppercase' }}>
-                ENTER THE ARENA. CONNECT YOUR NODES. SHIP FASTER.
-              </p>
-            </div>
-
-            <div style={{ marginTop: 32 }}>
-              <div style={{ border: '2px solid #3F3F46', padding: 16, background: '#09090b' }}>
-                <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.75rem', fontWeight: 800, color: '#dfe104', display: 'block', marginBottom: 4 }}>
-                  STATUS
-                </span>
-                <span style={{ fontSize: '0.75rem', color: '#fafafa', fontFamily: 'var(--font-mono)' }}>
-                  SYSTEM READY FOR INPUT
-                </span>
-              </div>
-            </div>
-          </div>
+          {/* Left Portion AuthSidebar */}
+          <AuthSidebar
+            title="INITIALIZE NODE"
+            subtitle="JOIN THE ARENA. CONNECT YOUR DEVELOPER PROFILE. SHIP FASTER."
+          />
 
           {/* Form Content */}
           <div className="tribe-form-container">

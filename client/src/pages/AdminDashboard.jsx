@@ -10,6 +10,7 @@ import {
   deleteUserAdmin,
   deleteProjectAdmin,
 } from '../services/adminService.js';
+import { testSmtpApi } from '../services/authService.js';
 import { toast } from 'react-hot-toast';
 import {
   FiUsers,
@@ -22,6 +23,7 @@ import {
   FiUserCheck,
   FiUserX,
   FiRefreshCw,
+  FiMail,
 } from 'react-icons/fi';
 
 const AdminDashboard = () => {
@@ -34,6 +36,21 @@ const AdminDashboard = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [activeTab, setActiveTab] = useState('OVERVIEW');
+  const [smtpResult, setSmtpResult] = useState(null);
+  const [loadingSmtp, setLoadingSmtp] = useState(false);
+
+  const handleTestSmtpAdmin = async () => {
+    setLoadingSmtp(true);
+    try {
+      const { data } = await testSmtpApi();
+      setSmtpResult(data.status);
+      toast.success(data.status?.connected ? 'SMTP TRANSPORT VERIFIED ONLINE' : 'SMTP RUNNING IN MOCK CONSOLE MODE');
+    } catch (err) {
+      toast.error('SMTP TEST FAILED');
+    } finally {
+      setLoadingSmtp(false);
+    }
+  };
 
   useEffect(() => {
     fetchStats();
@@ -159,7 +176,7 @@ const AdminDashboard = () => {
         <div className="container">
           {/* Navigation Tabs */}
           <div style={{ display: 'flex', gap: 12, marginBottom: 32, borderBottom: '2px solid #3F3F46', paddingBottom: 16 }}>
-            {['OVERVIEW', 'USERS'].map((tab) => (
+            {['OVERVIEW', 'USERS', 'SMTP RELAY'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -463,6 +480,75 @@ const AdminDashboard = () => {
                   </table>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Tab 3: SMTP & EMAIL SYSTEM */}
+          {activeTab === 'SMTP RELAY' && (
+            <div>
+              <div className="brutal-border" style={{ backgroundColor: '#09090b', padding: 32, marginBottom: 32 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 16 }}>
+                  <div>
+                    <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 900, color: '#dfe104', textTransform: 'uppercase', margin: 0 }}>
+                      NODEMAILER SMTP RELAY CONTROL
+                    </h2>
+                    <p style={{ fontSize: '0.85rem', color: '#a1a1aa', fontFamily: 'var(--font-mono)', marginTop: 6 }}>
+                      INSPECT AND VERIFY AUTOMATED EMAIL DISPATCH INFRASTRUCTURE.
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={handleTestSmtpAdmin}
+                    disabled={loadingSmtp}
+                    className="acid-btn"
+                    style={{ padding: '12px 24px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: 8 }}
+                  >
+                    <FiMail /> {loadingSmtp ? 'TESTING SMTP...' : 'TEST SMTP CONNECTION'}
+                  </button>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20, marginBottom: 32 }}>
+                  <div style={{ border: '1px solid #3F3F46', padding: 20, background: '#131315' }}>
+                    <span style={{ fontSize: '0.7rem', color: '#a1a1aa', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                      CONFIGURED TRANSPORT HOST
+                    </span>
+                    <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#fafafa', fontFamily: 'var(--font-mono)' }}>
+                      {import.meta.env.VITE_SMTP_HOST || 'smtp.ethereal.email (Default)'}
+                    </span>
+                  </div>
+
+                  <div style={{ border: '1px solid #3F3F46', padding: 20, background: '#131315' }}>
+                    <span style={{ fontSize: '0.7rem', color: '#a1a1aa', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                      DISPATCH CAPABILITIES
+                    </span>
+                    <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#10b981', fontFamily: 'var(--font-mono)' }}>
+                      WELCOME & PASSWORD RESET
+                    </span>
+                  </div>
+
+                  <div style={{ border: '1px solid #3F3F46', padding: 20, background: '#131315' }}>
+                    <span style={{ fontSize: '0.7rem', color: '#a1a1aa', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+                      SECURITY PROTOCOL
+                    </span>
+                    <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#dfe104', fontFamily: 'var(--font-mono)' }}>
+                      STARTTLS / TLS (PORT 587)
+                    </span>
+                  </div>
+                </div>
+
+                {smtpResult && (
+                  <div style={{ border: '2px solid #dfe104', background: '#131315', padding: 24, fontFamily: 'var(--font-mono)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#dfe104', fontWeight: 800, marginBottom: 12 }}>
+                      <FiMail /> SMTP TEST DIAGNOSTIC REPORT:
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: '#fafafa', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      <div>MODE: <span style={{ color: '#dfe104', fontWeight: 800 }}>{smtpResult.mode}</span></div>
+                      <div>STATUS: {smtpResult.connected ? <span style={{ color: '#10b981', fontWeight: 800 }}>ONLINE</span> : <span style={{ color: '#ef4444', fontWeight: 800 }}>OFFLINE / MOCK</span>}</div>
+                      <div>MESSAGE: {smtpResult.message}</div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>

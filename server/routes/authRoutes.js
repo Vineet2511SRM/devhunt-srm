@@ -1,6 +1,20 @@
 import express from 'express';
-import { register, login, logout, getMe, googleAuth } from '../controllers/authController.js';
-import { validateRegister, validateLogin } from '../validators/authValidators.js';
+import {
+  register,
+  login,
+  logout,
+  getMe,
+  googleAuth,
+  forgotPassword,
+  resetPassword,
+  testSmtp,
+} from '../controllers/authController.js';
+import {
+  validateRegister,
+  validateLogin,
+  validateForgotPassword,
+  validateResetPassword,
+} from '../validators/authValidators.js';
 import validate from '../middleware/validate.js';
 import { protect } from '../middleware/auth.js';
 import { authLimiter } from '../middleware/rateLimiter.js';
@@ -18,6 +32,15 @@ router.post('/login', authLimiter, validateLogin, validate, login);
 // POST /api/auth/google — Authenticate with Google
 router.post('/google', googleAuth);
 
+// POST /api/auth/forgot-password — Request password reset email via SMTP
+router.post('/forgot-password', authLimiter, validateForgotPassword, validate, forgotPassword);
+
+// POST /api/auth/reset-password/:token — Reset password with token
+router.post('/reset-password/:token', validateResetPassword, validate, resetPassword);
+
+// POST /api/auth/test-smtp — Verify SMTP transport connection
+router.post('/test-smtp', testSmtp);
+
 // POST /api/auth/logout — Clear auth cookie
 //   Pipeline: protect → logout
 router.post('/logout', protect, logout);
@@ -27,3 +50,4 @@ router.post('/logout', protect, logout);
 router.get('/me', protect, getMe);
 
 export default router;
+

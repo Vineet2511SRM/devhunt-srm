@@ -68,3 +68,40 @@ export const validateLogin = (req, res, next) => {
   req.validationErrors = errors;
   next();
 };
+
+/**
+ * Validate forgot password input
+ * Checks: email (present + valid)
+ */
+export const validateForgotPassword = (req, res, next) => {
+  const errors = [];
+  const { email } = req.body;
+
+  if (!email || typeof email !== 'string' || email.trim().length === 0) {
+    errors.push({ field: 'email', message: 'Email is required' });
+  } else if (!validator.isEmail(email)) {
+    errors.push({ field: 'email', message: 'Please provide a valid email address' });
+  }
+
+  req.validationErrors = errors;
+  next();
+};
+
+/**
+ * Validate reset password input
+ * Checks: password (min 6 chars)
+ */
+export const validateResetPassword = (req, res, next) => {
+  const errors = [];
+  const { password } = req.body;
+
+  if (!password || typeof password !== 'string') {
+    errors.push({ field: 'password', message: 'Password is required' });
+  } else if (password.length < 6) {
+    errors.push({ field: 'password', message: 'Password must be at least 6 characters' });
+  }
+
+  req.validationErrors = errors;
+  next();
+};
+
