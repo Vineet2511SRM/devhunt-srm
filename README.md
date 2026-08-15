@@ -1,272 +1,189 @@
-﻿# DevHunt SRM
+﻿<div align="center">
 
-> **Product Hunt for Campus Developers** — Ship your projects, get peer reviews, earn XP, and climb the campus leaderboard. Built on the MERN stack.
+# DevHunt SRM
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev/)
+**Product Hunt for Campus Developers**
+
+Ship your side projects. Get structured peer reviews. Earn XP and climb the leaderboard.
+
+Built for students at [SRM Institute of Science and Technology](https://www.srmist.edu.in/)
+
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node 20+](https://img.shields.io/badge/node-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+[![React 19](https://img.shields.io/badge/react-19-61DAFB?logo=react&logoColor=black)](https://react.dev)
+[![MongoDB](https://img.shields.io/badge/mongodb-atlas-47A248?logo=mongodb&logoColor=white)](https://mongodb.com)
+
+</div>
 
 ---
 
 ## What is DevHunt SRM?
 
-A campus-exclusive developer platform built for **SRM Institute of Science and Technology** students. Think Product Hunt, but for your hostel neighbour's side project.
+Students build incredible side projects that never get seen. DevHunt SRM gives them a stage.
 
-- 🚀 **Ship projects** — submit your MVP with screenshots, tech stack, GitHub & live links
-- ⭐ **Get peer reviews** — structured feedback across UI, code quality, innovation & more
-- ⬆️ **Earn upvotes** — community driven discovery
-- 🎮 **Level up** — XP system with badge achievements and a campus leaderboard
+**Project owners** submit their work with screenshots, tech stacks, and live links. **Reviewers** browse, upvote, and leave structured multi-axis feedback. Every action earns XP — ship enough and you go from *Novice Builder* to *Campus Legend* on the semester leaderboard.
+
+**Core capabilities:**
+
+- Submit projects with up to 5 Cloudinary-hosted screenshots
+- Structured reviews across UI/UX, Code Quality, and Innovation
+- One-click upvoting with animated counters
+- XP engine with non-linear leveling and automated badge unlocks
+- In-app notification feed for reviews, upvotes, level-ups, and badges
+- JWT + Google OAuth authentication with SMTP password reset
+- Full admin panel — user management, moderation, platform analytics
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | React 18, Vite, React Router v6, Axios |
-| **Backend** | Node.js, Express.js, JWT Auth |
-| **Database** | MongoDB Atlas, Mongoose |
-| **File Storage** | Cloudinary |
-| **Email** | Nodemailer (SMTP) |
-| **Styling** | Vanilla CSS, dark mode |
+**Frontend** — React 19 · Vite 8 · React Router 7 · Axios · Vanilla CSS (dark-first glassmorphic theme)
 
----
+**Backend** — Node.js 20 · Express 4 · Mongoose 8 · JWT · Bcrypt · Multer · Nodemailer
 
-## Getting Started
+**Infrastructure** — MongoDB Atlas · Cloudinary CDN · Google Identity Services · SMTP (Mailtrap / SendGrid)
 
-### Prerequisites
-
-- Node.js 18+ and npm
-- MongoDB Atlas (free tier works)
-- Cloudinary account (free tier)
-- SMTP provider (Mailtrap for dev, SendGrid/Resend for prod)
-
-### Setup
-
-```bash
-# 1. Clone
-git clone https://github.com/Vineet2511/devhunt-srm.git
-cd devhunt-srm
-
-# 2. Install dependencies
-cd server && npm install
-cd ../client && npm install
-
-# 3. Configure environment
-cp server/.env.example server/.env   # fill in your credentials
-# create client/.env with: VITE_API_URL=http://localhost:5000/api
-
-# 4. Run
-cd server && npm run dev   # Terminal 1 — http://localhost:5000
-cd client && npm run dev   # Terminal 2 — http://localhost:5173
-```
-
-See [`server/.env.example`](./server/.env.example) for all required environment variables.
-
----
-
-## Project Structure
-
-```
-devhunt-srm/
-├── client/          # React + Vite frontend
-│   └── src/
-│       ├── components/
-│       ├── contexts/
-│       ├── pages/
-│       ├── services/
-│       ├── styles/
-│       └── utils/
-│
-└── server/          # Node.js + Express backend
-    ├── controllers/
-    ├── middleware/
-    ├── models/
-    ├── routes/
-    ├── services/    # Gamification, email, notifications
-    ├── validators/
-    └── seeds/
-```
+**Security** — Helmet · CORS whitelist · NoSQL injection sanitization · Rate limiting · httpOnly secure cookies
 
 ---
 
 ## Architecture
 
+### System Overview
+
 ```mermaid
-graph LR
-    Client["⚛️ React Client"] -- "JWT REST" --> Server["🟢 Express API"]
-    Server --> DB["🗄️ MongoDB Atlas"]
-    Server --> Cloudinary["☁️ Cloudinary"]
-    Server --> SMTP["📧 SMTP"]
+graph TB
+    subgraph Client["Frontend — React 19 + Vite"]
+        UI[Pages & Components] --> State[Auth & Notification Context]
+        State --> HTTP[Axios Service Layer]
+    end
+
+    subgraph MW["Middleware Pipeline"]
+        Helmet[Helmet + CORS] --> Sanitize[Sanitize + Rate Limit]
+        Sanitize --> JWTAuth[JWT Auth + Roles]
+        JWTAuth --> Upload[Multer + Cloudinary]
+    end
+
+    subgraph Server["API Server — Express"]
+        Routes[Route Handlers] --> Validators[Input Validation]
+        Validators --> Controllers[Controllers]
+    end
+
+    subgraph Domain["Domain Services"]
+        XP[Gamification — XP, Levels, Badges]
+        Notif[Notification Dispatch]
+        Mail[Email — Nodemailer SMTP]
+    end
+
+    subgraph DB["MongoDB Atlas"]
+        Users[(Users)] ~~~ Projects[(Projects)]
+        Reviews[(Reviews)] ~~~ Upvotes[(Upvotes)]
+        Badges[(Badges)] ~~~ Notifications[(Notifications)]
+    end
+
+    subgraph Ext["External"]
+        CDN[Cloudinary CDN]
+        SMTP[SMTP Provider]
+        Google[Google OAuth 2.0]
+    end
+
+    HTTP -- "REST / JWT Cookie" --> MW
+    MW --> Server
+    Controllers --> Domain
+    Controllers --> DB
+    Domain --> DB
+    Upload --> CDN
+    Mail --> SMTP
+    JWTAuth -.-> Google
 ```
 
----
+### Request Flow
 
-## XP & Levels
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant C as React Client
+    participant A as Express API
+    participant G as Gamification
+    participant D as MongoDB
 
-| Action | XP |
-|--------|----|
-| Ship a project | +10 |
-| Write a review | +5 |
-| Receive a review | +25 |
-| Receive an upvote | +2 |
+    Note over U,D: Project Submission
+    U->>C: Submit project + screenshots
+    C->>A: POST /api/projects
+    A->>D: Save project document
+    A->>G: awardXP(owner, +10)
+    G->>D: Update XP, check level & badges
+    A-->>C: 201 Created
 
-| Level | Title | XP |
-|-------|-------|----|
-| 1 | Novice Builder | 0+ |
-| 2 | Campus Dev | 500+ |
-| 3 | Code Ninja | 1,500+ |
-| 4 | Ship Master | 3,000+ |
-| 5 | Campus Legend | 5,000+ |
+    Note over U,D: Peer Review
+    U->>C: Rate + write feedback
+    C->>A: POST /api/reviews/:projectId
+    A->>D: Save review, recalculate avgRating
+    A->>G: awardXP(reviewer, +5)
+    A->>G: awardXP(owner, +25)
+    G->>D: Update both users, dispatch notification
+    A-->>C: 201 Created
 
----
-
-## Contributing
-
-1. Fork → `git checkout -b feat/your-feature`
-2. Commit → `git commit -m "feat: ..."`
-3. Push → open a Pull Request
-
----
-
-## License
-
-MIT © DevHunt SRM
-
-
-
-[![Node.js](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev/)
-
----
-
-## What is DevHunt SRM?
-
-DevHunt SRM is a campus-exclusive developer ecosystem built for **SRM Institute of Science and Technology** students. Think Product Hunt, but for your hostel neighbour's side project.
-
-- **Project Owners** submit their MVPs, tools, and open-source projects
-- **Testers & Reviewers** browse, upvote, and leave structured feedback (pros, cons, suggestions + star ratings)
-- **Gamification** tracks everything — earn XP by shipping, reviewing, and receiving upvotes; level up from *Novice Builder* to *Campus Legend*
-- **Leaderboard** ranks the top campus devs by XP earned across the semester
-
----
-
-## Features
-
-| Feature | Details |
-|---------|---------|
-| 🚀 **Project Submission** | Submit with title, tagline, description, tech stack, GitHub link, live URL, and screenshots |
-| ⭐ **Structured Reviews** | Ratings across 5 axes (UI/UX, Code Quality, Innovation, Performance, Documentation) + free-text pros/cons |
-| ⬆️ **Upvotes** | Toggle upvotes; project owners earn XP per upvote received |
-| 🎮 **XP & Levels** | Ship (+10 XP) · Review (+5 XP) · Receive Review (+25 XP) · Receive Upvote (+2 XP) |
-| 🏆 **Leaderboard** | Live ranking of top developers on campus |
-| 🔔 **Notifications** | In-app notifications for upvotes, reviews, and project milestones |
-| 🔐 **Auth** | JWT-based auth with email verification and password reset via SMTP |
-| 🛡️ **Admin Panel** | Manage users, moderate projects, promote/demote roles, test SMTP relay |
-| 📱 **Responsive** | Mobile-first brutalist dark-mode UI |
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | React 18, Vite, React Router v6, Axios |
-| **Backend** | Node.js 20, Express.js, JWT Auth (httpOnly cookies) |
-| **Database** | MongoDB Atlas, Mongoose ODM |
-| **File Storage** | Cloudinary (image CDN for project screenshots and avatars) |
-| **Email** | Nodemailer (SMTP — works with SendGrid, Resend, Mailtrap, or any SMTP) |
-| **Styling** | Vanilla CSS with custom properties, dark mode |
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ and npm
-- MongoDB Atlas account (free tier works) or local MongoDB
-- Cloudinary account (free tier — for image uploads)
-- An SMTP provider (Mailtrap for dev, SendGrid/Resend for production)
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/Vineet2511/devhunt-srm.git
-cd devhunt-srm
+    Note over U,D: Upvote
+    U->>C: Toggle upvote
+    C->>A: POST /api/upvotes/:projectId/toggle
+    A->>D: Atomic insert/delete, update count
+    A->>G: awardXP(owner, +2) if new
+    A-->>C: 200 OK
 ```
 
-### 2. Set Up the Server
+### Data Model
 
-```bash
-cd server
-npm install
-cp .env.example .env
-```
+```mermaid
+erDiagram
+    USER ||--o{ PROJECT : owns
+    USER ||--o{ REVIEW : writes
+    USER ||--o{ UPVOTE : casts
+    USER ||--o{ NOTIFICATION : receives
+    USER }o--o{ BADGE : earns
+    PROJECT ||--o{ REVIEW : has
+    PROJECT ||--o{ UPVOTE : has
 
-Edit `server/.env` and fill in your credentials:
-
-```env
-PORT=5000
-NODE_ENV=development
-
-# MongoDB
-MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/devhunt-srm
-
-# JWT
-JWT_SECRET=your_strong_random_secret_here
-JWT_EXPIRE=7d
-COOKIE_EXPIRE=7
-
-# Frontend (CORS)
-CLIENT_URL=http://localhost:5173
-
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-
-# Email (SMTP)
-SMTP_HOST=smtp.mailtrap.io
-SMTP_PORT=2525
-SMTP_EMAIL=your_smtp_user
-SMTP_PASSWORD=your_smtp_password
-FROM_EMAIL=noreply@devhunt-srm.edu
-FROM_NAME="DevHunt SRM"
-```
-
-### 3. Set Up the Client
-
-```bash
-cd ../client
-npm install
-```
-
-Create `client/.env`:
-
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-### 4. Run Both Dev Servers
-
-Open two terminals:
-
-```bash
-# Terminal 1 — Backend
-cd server && npm run dev
-
-# Terminal 2 — Frontend
-cd client && npm run dev
-```
-
-The app will be available at **http://localhost:5173**.
-
-### 5. Seed Initial Data (Optional)
-
-```bash
-cd server
-node seeds/badgeSeeder.js   # Seeds badge definitions
+    USER {
+        string name
+        string email
+        string role
+        number xp
+        number level
+        ref badges
+    }
+    PROJECT {
+        string title
+        string tagline
+        string[] techStack
+        string[] screenshots
+        ref owner
+        number upvoteCount
+        number avgRating
+    }
+    REVIEW {
+        ref project
+        ref reviewer
+        object ratings
+        number overallScore
+        string pros
+        string cons
+    }
+    UPVOTE {
+        ref project
+        ref user
+    }
+    BADGE {
+        string name
+        string icon
+        string criteria
+    }
+    NOTIFICATION {
+        ref recipient
+        string type
+        string message
+        boolean read
+    }
 ```
 
 ---
@@ -275,311 +192,223 @@ node seeds/badgeSeeder.js   # Seeds badge definitions
 
 ```
 devhunt-srm/
-├── client/                 # React + Vite frontend
-│   └── src/
-│       ├── components/     # Reusable UI components
-│       ├── contexts/       # AuthContext, NotificationContext
-│       ├── pages/          # Route-level page components
-│       ├── services/       # Axios API service layer
-│       ├── styles/         # Per-page CSS modules
-│       └── utils/          # Helper functions
 │
-└── server/                 # Node.js + Express backend
-    ├── config/             # DB connection, Cloudinary config
-    ├── controllers/        # Route handler logic
-    ├── middleware/         # auth, validate, upload, rateLimit
-    ├── models/             # Mongoose schemas
-    ├── routes/             # Express routers
-    ├── services/           # Gamification, notification, email
-    ├── validators/         # express-validator rules
-    └── seeds/              # DB seeder scripts
+├── client/                        Frontend (React + Vite)
+│   └── src/
+│       ├── components/            Navbar, ProjectCard, ReviewForm, StarRating, Skeleton, etc.
+│       ├── contexts/              AuthContext, NotificationContext
+│       ├── pages/                 Home, Explore, ProjectDetail, Dashboard, Leaderboard,
+│       │                          Login, Register, Profile, SubmitProject, AdminDashboard
+│       ├── services/              Axios API client
+│       ├── styles/                Per-page CSS modules
+│       └── utils/                 Formatters and helpers
+│
+├── server/                        Backend (Node + Express)
+│   ├── config/                    DB connection, environment loader
+│   ├── controllers/               auth, project, review, upvote, user, notification, admin
+│   ├── middleware/                 auth, errorHandler, rateLimiter, sanitize, upload, validate
+│   ├── models/                    User, Project, Review, Upvote, Badge, Notification
+│   ├── routes/                    Express route definitions
+│   ├── services/                  gamification, email, notification
+│   ├── validators/                express-validator schemas
+│   ├── seeds/                     seed.js (badges, mock users, test projects)
+│   └── server.js                  Entry point
+│
+├── DESIGN.md                      UI design system spec
+└── DEVLOG.md                      Development changelog
 ```
 
 ---
 
-## System Architecture
+## Setup
 
-```mermaid
-graph TB
-    subgraph Users["👤 User Roles"]
-        PO["🏗️ Project Owner<br/>(Student who ships)"]
-        TR["🧪 Tester / Reviewer<br/>(Student who tests)"]
-    end
+### Prerequisites
 
-    subgraph Client["⚛️ React Frontend · Vite"]
-        direction TB
-        RC["React Router<br/>+ ProtectedRoute"]
-        Pages["Pages<br/>Home · Explore · ProjectDetail<br/>SubmitProject · Dashboard<br/>Profile · Leaderboard"]
-        Components["Components<br/>ProjectCard · ReviewForm<br/>UpvoteButton · StarRating<br/>Navbar · SearchBar"]
-        State["State Management<br/>AuthContext · NotificationContext"]
-        Services["API Service Layer<br/>Axios Instance<br/>+ JWT Interceptors"]
-    end
+- **Node.js** 20+ and npm
+- **MongoDB** — Atlas (free tier) or local instance
+- **Cloudinary** — free account for image uploads
+- **SMTP** — Mailtrap (dev) or SendGrid / Resend (prod)
 
-    subgraph Server["🟢 Node.js + Express Backend"]
-        direction TB
-        MW["Middleware Pipeline<br/>auth · validate · upload<br/>rateLimiter · errorHandler"]
-        Routes["REST API Routes<br/>/api/auth · /api/projects<br/>/api/reviews · /api/upvotes<br/>/api/users · /api/notifications"]
-        Controllers["Controllers<br/>authController · projectController<br/>reviewController · upvoteController<br/>userController · notificationController"]
-        BizLogic["Services Layer<br/>gamificationService<br/>notificationService<br/>emailService"]
-    end
+### Installation
 
-    subgraph Database["🗄️ MongoDB Atlas"]
-        Users_Col["Users<br/>name, email, xp, level, badges, role"]
-        Projects_Col["Projects<br/>title, tagline, techStack,<br/>screenshots, upvoteCount, avgRating"]
-        Reviews_Col["Reviews<br/>ratings, pros, cons, suggestion"]
-        Upvotes_Col["Upvotes<br/>user ref + project ref (unique)"]
-        Notif_Col["Notifications<br/>type, message, read status"]
-    end
+```bash
+# Clone the repository
+git clone https://github.com/Vineet2511/devhunt-srm.git
+cd devhunt-srm
 
-    subgraph External["☁️ External Services"]
-        Cloud["Cloudinary<br/>Image CDN"]
-        Email["SMTP Provider<br/>SendGrid / Resend / Mailtrap"]
-    end
+# Install server dependencies
+cd server
+npm install
+cp .env.example .env          # configure your credentials
 
-    PO -- "Submit / Edit Project" --> Client
-    TR -- "Browse / Upvote / Review" --> Client
-    Services -- "HTTP REST + JWT" --> MW
-    MW --> Routes --> Controllers --> BizLogic --> Database
-    Controllers --> Database
-    Controllers -- "Image upload" --> Cloud
-    BizLogic -- "Send emails" --> Email
+# Install client dependencies
+cd ../client
+npm install
+cp .env.example .env          # set VITE_API_URL
+```
+
+### Seed the database (optional)
+
+```bash
+cd server
+node seeds/seed.js            # creates badges, mock users, sample projects
+```
+
+### Run
+
+```bash
+# Terminal 1 — API server
+cd server && npm run dev      # → http://localhost:5000
+
+# Terminal 2 — Dev client
+cd client && npm run dev      # → http://localhost:5173
 ```
 
 ---
 
-## API Overview
+## Environment Variables
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/auth/register` | — | Register new user |
-| POST | `/api/auth/login` | — | Login, returns JWT cookie |
-| GET | `/api/auth/me` | ✅ | Get current user |
-| POST | `/api/auth/forgot-password` | — | Send reset email |
-| GET | `/api/projects` | — | List/search/filter projects |
-| POST | `/api/projects` | ✅ | Submit a project |
-| GET | `/api/projects/:id` | — | Get project + reviews |
-| DELETE | `/api/projects/:id` | ✅ (owner) | Delete own project |
-| POST | `/api/reviews/:projectId` | ✅ | Submit a review |
-| POST | `/api/upvotes/:projectId/toggle` | ✅ | Toggle upvote |
-| GET | `/api/users/leaderboard` | — | Get XP leaderboard |
-| PATCH | `/api/users/profile` | ✅ | Update profile |
-| GET | `/api/admin/stats` | ✅ (admin) | Platform statistics |
+### `server/.env`
 
----
+| Variable | Description |
+|----------|-------------|
+| `PORT` | Server port (default `5000`) |
+| `NODE_ENV` | `development` or `production` |
+| `MONGO_URI` | MongoDB connection string |
+| `JWT_SECRET` | Secret for signing tokens |
+| `JWT_EXPIRE` | Token lifetime (e.g. `7d`) |
+| `COOKIE_EXPIRE` | Cookie lifetime in days |
+| `CLIENT_URL` | Frontend origin for CORS |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Cloudinary API secret |
+| `SMTP_HOST` | SMTP server hostname |
+| `SMTP_PORT` | SMTP port (`2525` for Mailtrap) |
+| `SMTP_EMAIL` | SMTP auth username |
+| `SMTP_PASSWORD` | SMTP auth password |
+| `FROM_EMAIL` | Sender email address |
+| `FROM_NAME` | Sender display name |
 
-## Environment Variables Reference
+### `client/.env`
 
-### Server (`server/.env`)
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `MONGO_URI` | ✅ | MongoDB connection string |
-| `JWT_SECRET` | ✅ | Strong random string for JWT signing |
-| `JWT_EXPIRE` | ✅ | JWT lifetime (e.g. `7d`) |
-| `CLIENT_URL` | ✅ | Frontend URL for CORS |
-| `CLOUDINARY_CLOUD_NAME` | ✅ | Cloudinary cloud name |
-| `CLOUDINARY_API_KEY` | ✅ | Cloudinary API key |
-| `CLOUDINARY_API_SECRET` | ✅ | Cloudinary API secret |
-| `SMTP_HOST` | ✅ | SMTP server hostname |
-| `SMTP_PORT` | ✅ | SMTP port (587 for TLS, 2525 for Mailtrap) |
-| `SMTP_EMAIL` | ✅ | SMTP auth user |
-| `SMTP_PASSWORD` | ✅ | SMTP auth password |
-| `FROM_EMAIL` | ✅ | Sender email address |
-| `PORT` | — | Server port (default: 5000) |
-
-### Client (`client/.env`)
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `VITE_API_URL` | ✅ | Backend API base URL |
+| Variable | Description |
+|----------|-------------|
+| `VITE_API_URL` | Backend API base URL |
+| `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID |
 
 ---
 
-## XP & Gamification System
+## API Endpoints
 
-| Action | XP Earned | Who |
-|--------|-----------|-----|
-| Submit a project | +10 XP | Project Owner |
-| Write a peer review | +5 XP | Reviewer |
-| Receive a review | +25 XP | Project Owner |
-| Receive an upvote | +2 XP | Project Owner |
+### Authentication — `/api/auth`
 
-### Level Tiers
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| POST | `/register` | — | Create account |
+| POST | `/login` | — | Sign in (sets httpOnly cookie) |
+| POST | `/google` | — | Google OAuth sign-in |
+| POST | `/forgot-password` | — | Send reset email |
+| POST | `/reset-password/:token` | — | Reset password |
+| POST | `/logout` | ✓ | Clear session |
+| GET | `/me` | ✓ | Current user profile |
+
+### Projects — `/api/projects`
+
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| GET | `/` | — | List with search, sort, filter, pagination |
+| GET | `/:id` | — | Single project with owner & reviews |
+| POST | `/` | ✓ | Create (multipart, up to 5 screenshots) |
+| PUT | `/:id` | Owner | Update |
+| DELETE | `/:id` | Owner/Admin | Delete (cascades reviews & upvotes) |
+
+### Reviews — `/api/reviews`
+
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| GET | `/project/:projectId` | — | List reviews for a project |
+| POST | `/:projectId` | ✓ | Submit structured review |
+| PUT | `/:id` | Author | Edit review |
+| DELETE | `/:id` | Author/Admin | Delete review |
+
+### Upvotes — `/api/upvotes`
+
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| POST | `/:projectId/toggle` | ✓ | Toggle upvote |
+
+### Users — `/api/users`
+
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| GET | `/leaderboard` | — | XP rankings |
+| GET | `/:id` | — | Public profile |
+| PUT | `/profile` | ✓ | Update own profile |
+
+### Notifications — `/api/notifications`
+
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| GET | `/` | ✓ | All notifications |
+| GET | `/unread-count` | ✓ | Unread count |
+| PUT | `/:id/read` | ✓ | Mark one read |
+| PUT | `/read-all` | ✓ | Mark all read |
+
+### Admin — `/api/admin`
+
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| GET | `/stats` | Admin | Platform analytics |
+| GET | `/users` | Admin | User list (search, filter) |
+| PATCH | `/users/:id/role` | Admin | Change role |
+| DELETE | `/users/:id` | Admin | Delete user (cascade) |
+| DELETE | `/projects/:id` | Admin | Remove project |
+| DELETE | `/reviews/:id` | Admin | Remove review |
+
+---
+
+## Gamification
+
+Every meaningful action on DevHunt earns XP:
+
+| Action | XP | Recipient |
+|--------|----|-----------|
+| Submit a project | +10 | Creator |
+| Write a review | +5 | Reviewer |
+| Receive a review | +25 | Project owner |
+| Receive an upvote | +2 | Project owner |
+
+### Leveling
+
+Progression follows `Level = floor(sqrt(XP / 10)) + 1`:
 
 | Level | Title | XP Required |
 |-------|-------|-------------|
-| 1 | Novice Builder | 0 – 499 XP |
-| 2 | Campus Dev | 500 – 1,499 XP |
-| 3 | Code Ninja | 1,500 – 2,999 XP |
-| 4 | Ship Master | 3,000 – 4,999 XP |
-| 5 | Campus Legend | 5,000+ XP |
+| 1 | Novice Builder | 0 |
+| 2 | Campus Dev | 10 |
+| 3 | Code Ninja | 40 |
+| 4 | Ship Master | 90 |
+| 5 | Campus Legend | 160 |
+
+### Badges
+
+| Badge | Unlocked when |
+|-------|--------------|
+| 🚀 First Project | You ship your first project |
+| 🕵️ First Review | You write your first review |
+| ⬆️ First Upvote | You upvote a project |
+| 💯 Centurion | You hit 100 XP |
+| 🌟 Veteran | You hit 500 XP |
 
 ---
 
 ## Contributing
 
-SRM students are welcome to open issues, suggest features, or submit pull requests.
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feat/your-feature`
-3. Commit your changes: `git commit -m "feat: add your feature"`
+1. Fork the repo
+2. `git checkout -b feat/your-feature`
+3. `git commit -m "feat: add your feature"`
 4. Push and open a Pull Request
 
----
-
-## License
-
-MIT © DevHunt SRM
 
 
----
 
-## System Architecture
-
-```mermaid
-graph TB
-    subgraph Users["👤 User Roles"]
-        PO["🏗️ Project Owner<br/>(Student who ships)"]
-        TR["🧪 Tester / Reviewer<br/>(Student who tests)"]
-    end
-
-    subgraph Client["⚛️ React Frontend · Vite"]
-        direction TB
-        RC["React Router<br/>+ ProtectedRoute"]
-        Pages["Pages<br/>Home · Explore · ProjectDetail<br/>SubmitProject · Dashboard<br/>Profile · Leaderboard"]
-        Components["Components<br/>ProjectCard · ReviewForm<br/>UpvoteButton · StarRating<br/>Navbar · SearchBar"]
-        State["State Management<br/>AuthContext · ThemeContext<br/>NotificationContext"]
-        Services["API Service Layer<br/>Axios Instance<br/>+ JWT Interceptors"]
-    end
-
-    subgraph Server["🟢 Node.js + Express Backend"]
-        direction TB
-        MW["Middleware Pipeline<br/>auth · validate · upload<br/>rateLimiter · errorHandler"]
-        Routes["REST API Routes<br/>/api/auth · /api/projects<br/>/api/reviews · /api/upvotes<br/>/api/users · /api/notifications"]
-        Controllers["Controllers<br/>authController · projectController<br/>reviewController · upvoteController<br/>userController · notificationController"]
-        BizLogic["Services Layer<br/>gamificationService<br/>notificationService<br/>emailService"]
-        Validators["Validators<br/>authValidators<br/>projectValidators<br/>reviewValidators"]
-    end
-
-    subgraph Database["🗄️ MongoDB Atlas"]
-        direction TB
-        Users_Col["Users Collection<br/>name, email, password, xp,<br/>level, badges, role"]
-        Projects_Col["Projects Collection<br/>title, tagline, description,<br/>techStack, screenshots,<br/>upvoteCount, avgRating"]
-        Reviews_Col["Reviews Collection<br/>ratings object, pros, cons,<br/>suggestion, overallScore"]
-        Upvotes_Col["Upvotes Collection<br/>user ref + project ref<br/>(compound unique)"]
-        Badges_Col["Badges Collection<br/>name, icon, criteria"]
-        Notif_Col["Notifications Collection<br/>type, message, read status"]
-    end
-
-    subgraph External["☁️ External Services"]
-        Cloud["Cloudinary<br/>Image CDN"]
-        Email["Email Provider<br/>(SendGrid / Resend)"]
-    end
-
-    PO -- "Submit / Edit Project<br/>View Dashboard" --> Client
-    TR -- "Browse / Search<br/>Upvote / Review" --> Client
-
-    RC --> Pages
-    Pages --> Components
-    Pages --> State
-    State --> Services
-    Services -- "HTTP REST<br/>+ JWT Bearer Token" --> MW
-
-    MW --> Routes
-    Routes --> Validators
-    Validators --> Controllers
-    Controllers --> BizLogic
-    Controllers --> Database
-    BizLogic --> Database
-
-    Controllers -- "Upload images" --> Cloud
-    BizLogic -- "Send emails" --> Email
-
-    Projects_Col -. "owner ref" .-> Users_Col
-    Reviews_Col -. "project ref" .-> Projects_Col
-    Reviews_Col -. "reviewer ref" .-> Users_Col
-    Upvotes_Col -. "user + project refs" .-> Users_Col
-    Upvotes_Col -. "user + project refs" .-> Projects_Col
-    Notif_Col -. "recipient ref" .-> Users_Col
-
-    BizLogic -- "Award XP<br/>& Badges" --> Users_Col
-    BizLogic -- "Dispatch<br/>Notifications" --> Notif_Col
-```
-
----
-
-## Data Flow Summary
-
-```mermaid
-sequenceDiagram
-    participant PO as 🏗️ Project Owner
-    participant UI as ⚛️ React Client
-    participant API as 🟢 Express API
-    participant GS as 🎮 Gamification Service
-    participant DB as 🗄️ MongoDB
-    participant TR as 🧪 Tester
-
-    Note over PO,DB: Project Submission Flow
-    PO->>UI: Fill project form + upload images
-    UI->>API: POST /api/projects (JWT auth)
-    API->>DB: Save Project document
-    API->>GS: awardXP(owner, +10, "project_submitted")
-    GS->>DB: Update User.xp, check badge criteria
-    API-->>UI: 201 Created + project data
-    UI-->>PO: Redirect to project page ✅
-
-    Note over TR,DB: Review & Feedback Flow
-    TR->>UI: Browse Explore page
-    UI->>API: GET /api/projects?sort=newest
-    API->>DB: Query Projects (paginated)
-    API-->>UI: Project list
-    TR->>UI: Open project → Write structured review
-    UI->>API: POST /api/reviews/:projectId (JWT auth)
-    API->>DB: Save Review, recalculate avgRating
-    API->>GS: awardXP(reviewer, +5, "review_submitted")
-    API->>GS: awardXP(owner, +25, "review_received")
-    GS->>DB: Update both Users, dispatch Notification
-    API-->>UI: 201 Created
-    UI-->>TR: Review posted + XP toast 🎉
-
-    Note over TR,DB: Upvote Flow
-    TR->>UI: Click upvote button
-    UI->>API: POST /api/upvotes/:projectId/toggle
-    API->>DB: Insert/Delete Upvote, update upvoteCount
-    API->>GS: awardXP(voter, +2) if new upvote
-    API-->>UI: { upvoted: true, count: 42 }
-    UI-->>TR: Button animates, count updates ⬆️
-```
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | React 18, Vite, React Router, Axios |
-| **Backend** | Node.js, Express.js, JWT Auth |
-| **Database** | MongoDB Atlas, Mongoose ODM |
-| **File Storage** | Cloudinary |
-| **Styling** | Vanilla CSS (custom properties + dark mode) |
-
----
-
-## Getting Started
-
-```bash
-# Clone the repo
-git clone https://github.com/<your-username>/devhunt-srm.git
-cd devhunt-srm
-
-# Install dependencies
-cd server && npm install
-cd ../client && npm install
-
-# Set up environment variables
-cp server/.env.example server/.env
-cp client/.env.example client/.env
-
-# Run both dev servers
-npm run dev
-```
