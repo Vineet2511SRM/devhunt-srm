@@ -69,14 +69,14 @@ const Home = () => {
         {/* ---- Infinite Yellow Marquee Bar ---- */}
         <div className="marquee-container">
           <div className="marquee-content">
-            SHIP &amp; SHINE // 150+ PROJECTS SHIPPED // 500+ REVIEWS // 200+ ACTIVE DEVS // SHIP &amp; SHINE // 150+ PROJECTS SHIPPED // 500+ REVIEWS // 200+ ACTIVE DEVS //
+            SHIP &amp; SHINE // BUILT BY CAMPUS DEVS // PEER-REVIEWED // OPEN TO ALL SRM STUDENTS // SHIP &amp; SHINE // BUILT BY CAMPUS DEVS // PEER-REVIEWED // OPEN TO ALL SRM STUDENTS //
           </div>
         </div>
 
         {/* ---- Medical ECG Heart Monitor Pulse Line Banner ---- */}
         <div className="container" style={{ margin: '16px auto 32px' }}>
           <div className="brutal-border" style={{ padding: '12px 24px', background: '#09090b', boxShadow: '0 0 20px rgba(223, 225, 4, 0.15)' }}>
-            <HeartbeatECG height={36} color="#dfe104" label="CAMPUS COMMITS PULSE: 78 BPM // ACTIVE" />
+            <HeartbeatECG height={36} color="#dfe104" label="CAMPUS ACTIVITY MONITOR // LIVE" />
           </div>
         </div>
 

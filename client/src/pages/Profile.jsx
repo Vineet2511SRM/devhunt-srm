@@ -84,9 +84,6 @@ const Profile = () => {
           <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 32, position: 'relative', zIndex: 10 }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
-                <div style={{ width: 64, height: 64, border: '2px solid #3F3F46', background: '#09090b', boxShadow: '0 0 20px rgba(223, 225, 4, 0.3)' }}>
-                  <img src="/tech-node.png" alt="Tech Node" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
                 <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.75rem', fontWeight: 800, color: '#dfe104', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                   // PUBLIC DEVELOPER PROFILE
                 </span>
@@ -132,21 +129,6 @@ const Profile = () => {
                     }}
                   >
                     {user.profession || user.department || 'DEVELOPER'}
-                  </span>
-                  <span
-                    className="brutal-border"
-                    style={{
-                      background: '#dfe104',
-                      color: '#09090b',
-                      borderColor: '#dfe104',
-                      padding: '6px 14px',
-                      fontSize: '0.75rem',
-                      fontWeight: 800,
-                      textTransform: 'uppercase',
-                      fontFamily: 'var(--font-mono)',
-                    }}
-                  >
-                    AVAILABLE
                   </span>
                 </div>
 
@@ -242,19 +224,6 @@ const Profile = () => {
           )}
         </div>
 
-        {/* Review Marquee Banner (Matching Stitch Screenshot) */}
-        <div className="marquee-container" style={{ height: 48, display: 'flex', alignItems: 'center', background: '#131315', borderTop: '2px solid #3F3F46', borderBottom: '2px solid #3F3F46' }}>
-          <div className="marquee-content" style={{ fontSize: '0.8rem', color: '#fafafa', fontFamily: 'var(--font-mono)' }}>
-            <span style={{ color: '#dfe104' }}>"{user.name?.toUpperCase()} SHIPPED PROJECTS 3 WEEKS EARLY." - SR. ENG, DEVHUNT</span>
-            {'  ⚡  '}
-            <span>"BRUTALLY EFFICIENT CODE." - TECH LEAD</span>
-            {'  ⚡  '}
-            <span style={{ color: '#dfe104' }}>"REFACTORED THE ENTIRE BACKEND OVER A WEEKEND." - CTO</span>
-            {'  ⚡  '}
-            <span style={{ color: '#dfe104' }}>"{user.name?.toUpperCase()} SHIPPED PROJECTS 3 WEEKS EARLY." - SR. ENG, DEVHUNT</span>
-            {'  ⚡  '}
-          </div>
-        </div>
       </div>
     </Layout>
   );

@@ -44,9 +44,6 @@ const Leaderboard = () => {
           <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 24 }}>
             <div style={{ flex: 1, minWidth: 280 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
-                <div className="leaderboard-tech-node-badge">
-                  <img src="/tech-node.png" alt="Tech Node" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
                 <span style={{ fontFamily: 'var(--font-display)', fontSize: '0.75rem', fontWeight: 800, color: '#dfe104', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                   // CAMPUS XP RANKINGS
                 </span>
@@ -217,12 +214,6 @@ const Leaderboard = () => {
             </div>
           )}
 
-          {/* Load More Button */}
-          <div style={{ textAlign: 'center', marginTop: 40 }}>
-            <button className="acid-outline-btn" style={{ padding: '12px 36px', fontSize: '0.85rem' }}>
-              LOAD MORE
-            </button>
-          </div>
         </div>
       </div>
     </Layout>

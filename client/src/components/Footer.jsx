@@ -9,11 +9,15 @@ const Footer = () => {
         </div>
 
         <nav style={{ display: 'flex', gap: 'var(--space-6)', fontSize: 'var(--font-size-xs)', fontWeight: 700, textTransform: 'uppercase' }}>
-          <Link to="/explore" style={{ color: 'var(--color-text-secondary)' }}>DOCUMENTATION</Link>
-          <Link to="/explore" style={{ color: 'var(--color-text-secondary)' }}>API REFERENCE</Link>
-          <Link to="/leaderboard" style={{ color: 'var(--color-text-secondary)' }}>CHANGELOG</Link>
-          <Link to="/explore" style={{ color: 'var(--color-text-secondary)' }}>PRIVACY POLICY</Link>
+          <Link to="/explore" style={{ color: 'var(--color-text-secondary)' }}>EXPLORE</Link>
+          <Link to="/leaderboard" style={{ color: 'var(--color-text-secondary)' }}>LEADERBOARD</Link>
+          <Link to="/submit" style={{ color: 'var(--color-text-secondary)' }}>SUBMIT PROJECT</Link>
+          <Link to="/login" style={{ color: 'var(--color-text-secondary)' }}>LOGIN</Link>
         </nav>
+
+        <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
+          © {new Date().getFullYear()} DEVHUNT SRM
+        </div>
       </div>
     </footer>
   );

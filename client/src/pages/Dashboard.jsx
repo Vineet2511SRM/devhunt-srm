@@ -21,7 +21,6 @@ import {
   FiGrid,
   FiBarChart2,
   FiLayers,
-  FiTerminal,
   FiCheckCircle,
   FiSettings,
 } from 'react-icons/fi';
@@ -167,13 +166,6 @@ const Dashboard = () => {
               onClick={() => setActiveTab('PROJECTS')}
             >
               <FiLayers /> PROJECTS
-            </button>
-
-            <button
-              className={`sidebar-tab-btn ${activeTab === 'TERMINAL' ? 'active' : ''}`}
-              onClick={() => setActiveTab('TERMINAL')}
-            >
-              <FiTerminal /> TERMINAL
             </button>
 
             <button
@@ -333,27 +325,46 @@ const Dashboard = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
                   <div className="dashboard-section-box">
                     <h2 className="dashboard-section-title">ACHIEVEMENTS</h2>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                      <div className="brutal-border" style={{ padding: 12, textAlign: 'center', background: '#dfe104', color: '#09090b' }}>
-                        <FiZap style={{ fontSize: '1.75rem', marginBottom: 4 }} />
-                        <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase' }}>HOT STREAK</div>
-                      </div>
-
-                      <div className="brutal-border" style={{ padding: 12, textAlign: 'center', background: '#131315', color: '#fafafa' }}>
-                        <FiShield style={{ fontSize: '1.75rem', marginBottom: 4, color: '#dfe104' }} />
-                        <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase' }}>SQUASHER</div>
-                      </div>
-
-                      <div className="brutal-border" style={{ padding: 12, textAlign: 'center', background: '#131315', color: '#71717a', opacity: 0.5 }}>
-                        <FiAward style={{ fontSize: '1.75rem', marginBottom: 4 }} />
-                        <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase' }}>CHAMPION</div>
-                      </div>
-
-                      <div className="brutal-border" style={{ padding: 12, textAlign: 'center', background: '#131315', color: '#71717a', opacity: 0.5 }}>
-                        <FiUsers style={{ fontSize: '1.75rem', marginBottom: 4 }} />
-                        <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase' }}>SOCIALITE</div>
-                      </div>
-                    </div>
+                    {(() => {
+                      const BADGE_META = [
+                        { id: 'hot_streak', icon: <FiZap />, label: 'HOT STREAK' },
+                        { id: 'squasher', icon: <FiShield />, label: 'SQUASHER' },
+                        { id: 'champion', icon: <FiAward />, label: 'CHAMPION' },
+                        { id: 'socialite', icon: <FiUsers />, label: 'SOCIALITE' },
+                      ];
+                      const earnedIds = (user?.badges || []).map((b) =>
+                        typeof b === 'string' ? b : b?.name || b?.id
+                      );
+                      return (
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                          {BADGE_META.map((badge) => {
+                            const earned = earnedIds.includes(badge.id);
+                            return (
+                              <div
+                                key={badge.id}
+                                className="brutal-border"
+                                style={{
+                                  padding: 12,
+                                  textAlign: 'center',
+                                  background: earned ? '#dfe104' : '#131315',
+                                  color: earned ? '#09090b' : '#71717a',
+                                  opacity: earned ? 1 : 0.5,
+                                }}
+                                title={earned ? `${badge.label} — Earned` : `${badge.label} — Locked`}
+                              >
+                                <div style={{ fontSize: '1.75rem', marginBottom: 4 }}>{badge.icon}</div>
+                                <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase' }}>
+                                  {badge.label}
+                                </div>
+                                {!earned && (
+                                  <div style={{ fontSize: '0.6rem', marginTop: 2, color: '#52525b', fontFamily: 'var(--font-mono)' }}>LOCKED</div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   {/* Recent Activity Timeline */}
@@ -574,13 +585,13 @@ const Dashboard = () => {
         </main>
       </div>
 
-      {/* Stitch Dashboard Bottom Bar (Matching Screenshot) */}
+      {/* Dashboard Bottom Bar */}
       <div style={{ borderTop: '2px solid #3F3F46', background: '#09090b', padding: '12px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', color: '#a1a1aa', textTransform: 'uppercase', fontFamily: 'var(--font-mono)' }}>
-        <div>© DEVHUNT SRM // NO REST FOR THE WICKED</div>
+        <div>© {new Date().getFullYear()} DEVHUNT SRM</div>
         <div style={{ display: 'flex', gap: 20 }}>
           <span style={{ color: '#dfe104', fontWeight: 800 }}>STATUS: OPERATIONAL</span>
-          <Link to="/explore" style={{ color: '#a1a1aa', textDecoration: 'none' }}>API_DOCS</Link>
-          <a href="https://github.com" target="_blank" rel="noreferrer" style={{ color: '#a1a1aa', textDecoration: 'none' }}>GH_REPO</a>
+          <Link to="/explore" style={{ color: '#a1a1aa', textDecoration: 'none' }}>EXPLORE</Link>
+          <Link to="/leaderboard" style={{ color: '#a1a1aa', textDecoration: 'none' }}>LEADERBOARD</Link>
         </div>
       </div>
     </Layout>
