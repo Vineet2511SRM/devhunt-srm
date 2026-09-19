@@ -27,8 +27,8 @@ export const env = {
   SMTP: {
     HOST: process.env.SMTP_HOST || '',
     PORT: process.env.SMTP_PORT || 2525,
-    EMAIL: process.env.SMTP_EMAIL || '',
-    PASSWORD: process.env.SMTP_PASSWORD || '',
+    USER: process.env.SMTP_USER || process.env.SMTP_EMAIL || '',
+    PASS: process.env.SMTP_PASS || process.env.SMTP_PASSWORD || '',
     FROM_EMAIL: process.env.FROM_EMAIL || 'noreply@devhunt-srm.edu',
     FROM_NAME: process.env.FROM_NAME || 'DevHunt SRM',
   },
